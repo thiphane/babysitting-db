@@ -257,3 +257,144 @@ BEGIN
     END IF;
 END;
 /
+-- ============================================================
+-- Pessoas
+-- ============================================================
+INSERT INTO Pessoas VALUES ('111111111', 'Ana Silva');
+INSERT INTO Pessoas VALUES ('222222222', 'Bruno Costa');
+INSERT INTO Pessoas VALUES ('333333333', 'Carla Mendes');
+INSERT INTO Pessoas VALUES ('444444444', 'David Ferreira');
+INSERT INTO Pessoas VALUES ('555555555', 'Eva Rodrigues');
+INSERT INTO Pessoas VALUES ('666666666', 'Miguel Lopes');  -- crianca
+INSERT INTO Pessoas VALUES ('777777777', 'Sofia Martins'); -- crianca
+
+-- ============================================================
+-- Adultos
+-- ============================================================
+INSERT INTO Adultos VALUES ('111111111', 'ana.silva@email.com',    '910000001');
+INSERT INTO Adultos VALUES ('222222222', 'bruno.costa@email.com',  '910000002');
+INSERT INTO Adultos VALUES ('333333333', 'carla.mendes@email.com', '910000003');
+INSERT INTO Adultos VALUES ('444444444', 'david.f@email.com',      '910000004');
+INSERT INTO Adultos VALUES ('555555555', 'eva.rod@email.com',      '910000005');
+
+-- ============================================================
+-- Clientes
+-- ============================================================
+INSERT INTO Clientes VALUES ('111111111', 'Rua das Flores 1, Lisboa');
+INSERT INTO Clientes VALUES ('222222222', 'Av. da Liberdade 200, Porto');
+INSERT INTO Clientes VALUES ('333333333', 'Rua do Sol 45, Setubal');
+
+-- ============================================================
+-- Trabalhadores
+-- ============================================================
+INSERT INTO Trabalhadores VALUES ('444444444', 'Experiência em babysitting, 3 anos.');
+INSERT INTO Trabalhadores VALUES ('555555555', 'Educadora de infância, 5 anos de experiência.');
+
+-- ============================================================
+-- Disponibilidade
+-- ============================================================
+INSERT INTO Disponibilidade VALUES ('444444444', 'Segunda',  TO_DATE('08:00','HH24:MI'), TO_DATE('18:00','HH24:MI'));
+INSERT INTO Disponibilidade VALUES ('444444444', 'Quarta',   TO_DATE('08:00','HH24:MI'), TO_DATE('18:00','HH24:MI'));
+INSERT INTO Disponibilidade VALUES ('555555555', 'Terca',    TO_DATE('09:00','HH24:MI'), TO_DATE('17:00','HH24:MI'));
+INSERT INTO Disponibilidade VALUES ('555555555', 'Quinta',   TO_DATE('09:00','HH24:MI'), TO_DATE('17:00','HH24:MI'));
+
+-- ============================================================
+-- Criancas
+-- ============================================================
+INSERT INTO Criancas VALUES ('666666666', '111111111', TO_DATE('2018-03-15','YYYY-MM-DD'));
+INSERT INTO Criancas VALUES ('777777777', '222222222', TO_DATE('2020-07-22','YYYY-MM-DD'));
+
+-- ============================================================
+-- TiposAlergia
+-- ============================================================
+INSERT INTO TiposAlergia VALUES ('Amendoim');
+INSERT INTO TiposAlergia VALUES ('Lactose');
+INSERT INTO TiposAlergia VALUES ('Gluten');
+INSERT INTO TiposAlergia VALUES ('Marisco');
+
+-- ============================================================
+-- Alergias
+-- ============================================================
+INSERT INTO Alergias VALUES ('666666666', 'Amendoim');
+INSERT INTO Alergias VALUES ('666666666', 'Lactose');
+INSERT INTO Alergias VALUES ('777777777', 'Gluten');
+
+-- ============================================================
+-- Servicos
+-- ============================================================
+INSERT INTO Servicos (nCC, data, local, hora_inicio, hora_final, preco)
+VALUES ('111111111', TO_DATE('2024-06-01','YYYY-MM-DD'), 'Rua das Flores 1, Lisboa',
+        TO_DATE('2024-06-01 09:00','YYYY-MM-DD HH24:MI'),
+        TO_DATE('2024-06-01 18:00','YYYY-MM-DD HH24:MI'), 80.00);
+
+INSERT INTO Servicos (nCC, data, local, hora_inicio, hora_final, preco)
+VALUES ('222222222', TO_DATE('2024-06-05','YYYY-MM-DD'), 'Av. da Liberdade 200, Porto',
+        TO_DATE('2024-06-05 14:00','YYYY-MM-DD HH24:MI'),
+        TO_DATE('2024-06-05 20:00','YYYY-MM-DD HH24:MI'), 120.00);
+
+INSERT INTO Servicos (nCC, data, local, hora_inicio, hora_final, preco)
+VALUES ('333333333', TO_DATE('2024-06-10','YYYY-MM-DD'), 'Rua do Sol 45, Setubal',
+        TO_DATE('2024-06-10 10:00','YYYY-MM-DD HH24:MI'),
+        TO_DATE('2024-06-10 16:00','YYYY-MM-DD HH24:MI'), 150.00);
+
+-- ============================================================
+-- Babysitting (id_servico = 1)
+-- ============================================================
+INSERT INTO Babysitting VALUES (1, TO_DATE('2024-06-01 20:00','YYYY-MM-DD HH24:MI'));
+
+-- ============================================================
+-- Festas (id_servico = 3)
+-- ============================================================
+INSERT INTO Festas VALUES (3, 'Dinossauros');
+
+-- ============================================================
+-- Eventos (id_servico = 2)
+-- ============================================================
+INSERT INTO Eventos VALUES (2, 'Aniversário');
+
+-- ============================================================
+-- Inventario
+-- ============================================================
+INSERT INTO Inventario (nome_item, quantidade) VALUES ('Baloes',      100);
+INSERT INTO Inventario (nome_item, quantidade) VALUES ('Toalhas',      20);
+INSERT INTO Inventario (nome_item, quantidade) VALUES ('Jogos de mesa', 10);
+
+-- ============================================================
+-- Participam
+-- ============================================================
+INSERT INTO Participam VALUES (1, '666666666');
+INSERT INTO Participam VALUES (3, '777777777');
+
+-- ============================================================
+-- Trabalham
+-- ============================================================
+INSERT INTO Trabalham VALUES ('444444444', 1, 60.00, 9.0);
+INSERT INTO Trabalham VALUES ('555555555', 3, 90.00, 6.0);
+
+-- ============================================================
+-- Utilizam
+-- ============================================================
+INSERT INTO Utilizam VALUES (3, 1, 30);  -- Festa usa 30 baloes
+INSERT INTO Utilizam VALUES (3, 3,  2);  -- Festa usa 2 jogos de mesa
+
+-- ============================================================
+-- PagamentoCliente
+-- ============================================================
+INSERT INTO PagamentoCliente (id_servico, nCC, valor, metodo, data_pag)
+VALUES (1, '111111111', 80.00,  'MBWay',       TO_DATE('2024-06-01','YYYY-MM-DD'));
+INSERT INTO PagamentoCliente (id_servico, nCC, valor, metodo, data_pag)
+VALUES (2, '222222222', 120.00, 'Multibanco',   TO_DATE('2024-06-05','YYYY-MM-DD'));
+INSERT INTO PagamentoCliente (id_servico, nCC, valor, metodo, data_pag)
+VALUES (3, '333333333', 150.00, 'Transferencia',TO_DATE('2024-06-10','YYYY-MM-DD'));
+
+-- ============================================================
+-- Avaliacoes
+-- ============================================================
+INSERT INTO Avaliacoes (id_servico, nCC, classificacao, comentario, data_avaliacao)
+VALUES (1, '111111111', 5, 'Excelente serviço, muito profissional!', TO_DATE('2024-06-02','YYYY-MM-DD'));
+INSERT INTO Avaliacoes (id_servico, nCC, classificacao, comentario, data_avaliacao)
+VALUES (2, '222222222', 4, 'Muito bom, recomendo.', TO_DATE('2024-06-06','YYYY-MM-DD'));
+INSERT INTO Avaliacoes (id_servico, nCC, classificacao, comentario, data_avaliacao)
+VALUES (3, '333333333', 5, 'Festa incrível, as crianças adoraram!', TO_DATE('2024-06-11','YYYY-MM-DD'));
+
+COMMIT;
