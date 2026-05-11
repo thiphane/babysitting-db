@@ -62,11 +62,12 @@ CREATE TABLE Trabalhadores (
 );
 
 CREATE TABLE Disponibilidade (
+    id_disp         NUMBER          GENERATED ALWAYS AS IDENTITY,
     nCC             VARCHAR2(20)    NOT NULL,
     dia_semana      VARCHAR2(15)    NOT NULL,
     hora_inicio     DATE            NOT NULL,
     hora_fim        DATE            NOT NULL,
-    CONSTRAINT pk_disponibilidade PRIMARY KEY (nCC, dia_semana, hora_inicio),
+    CONSTRAINT pk_disponibilidade PRIMARY KEY (id_disp),
     CONSTRAINT fk_disp_trabalhadores FOREIGN KEY (nCC) REFERENCES Trabalhadores(nCC)
         ON DELETE CASCADE,
     CONSTRAINT ck_disp_horas CHECK (hora_fim > hora_inicio),
@@ -105,11 +106,11 @@ CREATE TABLE Servicos (
     data            DATE            NOT NULL,
     local           VARCHAR2(255)   NOT NULL,
     hora_inicio     DATE            NOT NULL,
-    hora_final      DATE            NOT NULL,
+    hora_fim        DATE            NOT NULL,
     preco           NUMBER(10,2)    NOT NULL,
     CONSTRAINT pk_servicos PRIMARY KEY (id_servico),
     CONSTRAINT fk_servicos_clientes FOREIGN KEY (nCC) REFERENCES Clientes(nCC),
-    CONSTRAINT ck_servicos_horas    CHECK (hora_final > hora_inicio),
+    CONSTRAINT ck_servicos_horas    CHECK (hora_fim > hora_inicio),
     CONSTRAINT ck_servicos_preco    CHECK (preco >= 0)
 );
 
@@ -128,12 +129,12 @@ DECLARE
     v_inicio    DATE;
     v_final     DATE;
 BEGIN
-    SELECT hora_inicio, hora_final
+    SELECT hora_inicio, hora_fim
     INTO v_inicio, v_final
     FROM Servicos
     WHERE id_servico = :NEW.id_servico;
 
-    IF :NEW.horas_dormir < v_inicio OR :NEW.horas_dormir > v_final THEN
+    IF :NEW.horas_dormir < v_inicio OR :NEW.horas_dormir > v_fim THEN
         RAISE_APPLICATION_ERROR(-20001,
             'horas_dormir deve estar entre hora_inicio e hora_final do serviço.');
     END IF;
@@ -218,7 +219,7 @@ FOR EACH ROW
 DECLARE
     v_duracao   NUMBER;
 BEGIN
-    SELECT (hora_final - hora_inicio) * 24
+    SELECT (hora_fim - hora_inicio) * 24
     INTO v_duracao
     FROM Servicos
     WHERE id_servico = :NEW.id_servico;
@@ -258,51 +259,79 @@ BEGIN
 END;
 /
 -- ============================================================
--- Pessoas
+-- Pessoas (15 pessoas: 6 clientes, 4 trabalhadores, 5 crianças)
 -- ============================================================
-INSERT INTO Pessoas VALUES ('111111111', 'Ana Silva');
-INSERT INTO Pessoas VALUES ('222222222', 'Bruno Costa');
-INSERT INTO Pessoas VALUES ('333333333', 'Carla Mendes');
-INSERT INTO Pessoas VALUES ('444444444', 'David Ferreira');
-INSERT INTO Pessoas VALUES ('555555555', 'Eva Rodrigues');
-INSERT INTO Pessoas VALUES ('666666666', 'Miguel Lopes');  -- crianca
-INSERT INTO Pessoas VALUES ('777777777', 'Sofia Martins'); -- crianca
+INSERT INTO Pessoas VALUES ('100000001', 'Maria João Silva');
+INSERT INTO Pessoas VALUES ('100000002', 'António Ferreira');
+INSERT INTO Pessoas VALUES ('100000003', 'Beatriz Santos');
+INSERT INTO Pessoas VALUES ('100000004', 'Carlos Oliveira');
+INSERT INTO Pessoas VALUES ('100000005', 'Diana Costa');
+INSERT INTO Pessoas VALUES ('100000006', 'Eduardo Martins');
+INSERT INTO Pessoas VALUES ('200000001', 'Filipa Rodrigues');  -- trabalhadora
+INSERT INTO Pessoas VALUES ('200000002', 'Gonçalo Pereira');   -- trabalhador
+INSERT INTO Pessoas VALUES ('200000003', 'Helena Sousa');      -- trabalhadora
+INSERT INTO Pessoas VALUES ('200000004', 'Ivo Carvalho');      -- trabalhador
+INSERT INTO Pessoas VALUES ('300000001', 'Tomás Silva');       -- criança
+INSERT INTO Pessoas VALUES ('300000002', 'Inês Ferreira');     -- criança
+INSERT INTO Pessoas VALUES ('300000003', 'Rodrigo Santos');    -- criança
+INSERT INTO Pessoas VALUES ('300000004', 'Leonor Oliveira');   -- criança
+INSERT INTO Pessoas VALUES ('300000005', 'Mateus Costa');      -- criança
 
 -- ============================================================
 -- Adultos
 -- ============================================================
-INSERT INTO Adultos VALUES ('111111111', 'ana.silva@email.com',    '910000001');
-INSERT INTO Adultos VALUES ('222222222', 'bruno.costa@email.com',  '910000002');
-INSERT INTO Adultos VALUES ('333333333', 'carla.mendes@email.com', '910000003');
-INSERT INTO Adultos VALUES ('444444444', 'david.f@email.com',      '910000004');
-INSERT INTO Adultos VALUES ('555555555', 'eva.rod@email.com',      '910000005');
+INSERT INTO Adultos VALUES ('100000001', 'maria.silva@gmail.com',     '911000001');
+INSERT INTO Adultos VALUES ('100000002', 'antonio.ferreira@gmail.com','911000002');
+INSERT INTO Adultos VALUES ('100000003', 'beatriz.santos@gmail.com',  '911000003');
+INSERT INTO Adultos VALUES ('100000004', 'carlos.oliveira@gmail.com', '911000004');
+INSERT INTO Adultos VALUES ('100000005', 'diana.costa@gmail.com',     '911000005');
+INSERT INTO Adultos VALUES ('100000006', 'eduardo.martins@gmail.com', '911000006');
+INSERT INTO Adultos VALUES ('200000001', 'filipa.rod@gmail.com',      '922000001');
+INSERT INTO Adultos VALUES ('200000002', 'goncalo.per@gmail.com',     '922000002');
+INSERT INTO Adultos VALUES ('200000003', 'helena.sousa@gmail.com',    '922000003');
+INSERT INTO Adultos VALUES ('200000004', 'ivo.carvalho@gmail.com',    '922000004');
 
 -- ============================================================
 -- Clientes
 -- ============================================================
-INSERT INTO Clientes VALUES ('111111111', 'Rua das Flores 1, Lisboa');
-INSERT INTO Clientes VALUES ('222222222', 'Av. da Liberdade 200, Porto');
-INSERT INTO Clientes VALUES ('333333333', 'Rua do Sol 45, Setubal');
+INSERT INTO Clientes VALUES ('100000001', 'Rua das Flores 10, Lisboa');
+INSERT INTO Clientes VALUES ('100000002', 'Av. da Liberdade 55, Porto');
+INSERT INTO Clientes VALUES ('100000003', 'Rua do Sol 8, Setubal');
+INSERT INTO Clientes VALUES ('100000004', 'Travessa da Paz 3, Braga');
+INSERT INTO Clientes VALUES ('100000005', 'Rua Nova 22, Coimbra');
+INSERT INTO Clientes VALUES ('100000006', 'Av. do Mar 100, Faro');
 
 -- ============================================================
 -- Trabalhadores
 -- ============================================================
-INSERT INTO Trabalhadores VALUES ('444444444', 'Experiência em babysitting, 3 anos.');
-INSERT INTO Trabalhadores VALUES ('555555555', 'Educadora de infância, 5 anos de experiência.');
+INSERT INTO Trabalhadores VALUES ('200000001', 'Educadora de infância com 5 anos de experiência. Especializada em crianças dos 0-6 anos.');
+INSERT INTO Trabalhadores VALUES ('200000002', 'Estudante de psicologia. Experiência em babysitting há 3 anos.');
+INSERT INTO Trabalhadores VALUES ('200000003', 'Professora primária reformada. Excelente com crianças em idade escolar.');
+INSERT INTO Trabalhadores VALUES ('200000004', 'Animador de festas infantis com 7 anos de experiência.');
 
 -- ============================================================
 -- Disponibilidade
 -- ============================================================
-INSERT INTO Disponibilidade VALUES ('444444444', 'Segunda',  TO_DATE('08:00','HH24:MI'), TO_DATE('18:00','HH24:MI'));
-INSERT INTO Disponibilidade VALUES ('444444444', 'Quarta',   TO_DATE('08:00','HH24:MI'), TO_DATE('18:00','HH24:MI'));
-INSERT INTO Disponibilidade VALUES ('555555555', 'Terca',    TO_DATE('09:00','HH24:MI'), TO_DATE('17:00','HH24:MI'));
-INSERT INTO Disponibilidade VALUES ('555555555', 'Quinta',   TO_DATE('09:00','HH24:MI'), TO_DATE('17:00','HH24:MI'));
+INSERT INTO Disponibilidade (nCC, dia_semana, hora_inicio, hora_fim) VALUES ('200000001', 'Segunda', TO_DATE('08:00','HH24:MI'), TO_DATE('18:00','HH24:MI'));
+INSERT INTO Disponibilidade (nCC, dia_semana, hora_inicio, hora_fim) VALUES ('200000001', 'Terca',   TO_DATE('08:00','HH24:MI'), TO_DATE('18:00','HH24:MI'));
+INSERT INTO Disponibilidade (nCC, dia_semana, hora_inicio, hora_fim) VALUES ('200000001', 'Quarta',  TO_DATE('08:00','HH24:MI'), TO_DATE('18:00','HH24:MI'));
+INSERT INTO Disponibilidade (nCC, dia_semana, hora_inicio, hora_fim) VALUES ('200000002', 'Quinta',  TO_DATE('14:00','HH24:MI'), TO_DATE('20:00','HH24:MI'));
+INSERT INTO Disponibilidade (nCC, dia_semana, hora_inicio, hora_fim) VALUES ('200000002', 'Sexta',   TO_DATE('14:00','HH24:MI'), TO_DATE('20:00','HH24:MI'));
+INSERT INTO Disponibilidade (nCC, dia_semana, hora_inicio, hora_fim) VALUES ('200000002', 'Sabado',  TO_DATE('10:00','HH24:MI'), TO_DATE('22:00','HH24:MI'));
+INSERT INTO Disponibilidade (nCC, dia_semana, hora_inicio, hora_fim) VALUES ('200000003', 'Segunda', TO_DATE('09:00','HH24:MI'), TO_DATE('17:00','HH24:MI'));
+INSERT INTO Disponibilidade (nCC, dia_semana, hora_inicio, hora_fim) VALUES ('200000003', 'Quarta',  TO_DATE('09:00','HH24:MI'), TO_DATE('17:00','HH24:MI'));
+INSERT INTO Disponibilidade (nCC, dia_semana, hora_inicio, hora_fim) VALUES ('200000003', 'Sexta',   TO_DATE('09:00','HH24:MI'), TO_DATE('17:00','HH24:MI'));
+INSERT INTO Disponibilidade (nCC, dia_semana, hora_inicio, hora_fim) VALUES ('200000004', 'Sabado',  TO_DATE('10:00','HH24:MI'), TO_DATE('22:00','HH24:MI'));
+INSERT INTO Disponibilidade (nCC, dia_semana, hora_inicio, hora_fim) VALUES ('200000004', 'Domingo', TO_DATE('10:00','HH24:MI'), TO_DATE('22:00','HH24:MI'));
 
 -- ============================================================
 -- Criancas
 -- ============================================================
-INSERT INTO Criancas VALUES ('666666666', '111111111', TO_DATE('2018-03-15','YYYY-MM-DD'));
-INSERT INTO Criancas VALUES ('777777777', '222222222', TO_DATE('2020-07-22','YYYY-MM-DD'));
+INSERT INTO Criancas VALUES ('300000001', '100000001', TO_DATE('2018-03-10','YYYY-MM-DD'));
+INSERT INTO Criancas VALUES ('300000002', '100000001', TO_DATE('2020-07-25','YYYY-MM-DD'));
+INSERT INTO Criancas VALUES ('300000003', '100000002', TO_DATE('2017-11-05','YYYY-MM-DD'));
+INSERT INTO Criancas VALUES ('300000004', '100000003', TO_DATE('2019-01-15','YYYY-MM-DD'));
+INSERT INTO Criancas VALUES ('300000005', '100000004', TO_DATE('2021-06-30','YYYY-MM-DD'));
 
 -- ============================================================
 -- TiposAlergia
@@ -311,90 +340,196 @@ INSERT INTO TiposAlergia VALUES ('Amendoim');
 INSERT INTO TiposAlergia VALUES ('Lactose');
 INSERT INTO TiposAlergia VALUES ('Gluten');
 INSERT INTO TiposAlergia VALUES ('Marisco');
+INSERT INTO TiposAlergia VALUES ('Ovo');
+INSERT INTO TiposAlergia VALUES ('Soja');
+INSERT INTO TiposAlergia VALUES ('Frutos secos');
 
 -- ============================================================
 -- Alergias
 -- ============================================================
-INSERT INTO Alergias VALUES ('666666666', 'Amendoim');
-INSERT INTO Alergias VALUES ('666666666', 'Lactose');
-INSERT INTO Alergias VALUES ('777777777', 'Gluten');
+INSERT INTO Alergias VALUES ('300000001', 'Amendoim');
+INSERT INTO Alergias VALUES ('300000001', 'Lactose');
+INSERT INTO Alergias VALUES ('300000002', 'Gluten');
+INSERT INTO Alergias VALUES ('300000003', 'Ovo');
+INSERT INTO Alergias VALUES ('300000004', 'Marisco');
+INSERT INTO Alergias VALUES ('300000004', 'Frutos secos');
+INSERT INTO Alergias VALUES ('300000005', 'Soja');
 
 -- ============================================================
--- Servicos
+-- Servicos (10 serviços)
 -- ============================================================
-INSERT INTO Servicos (nCC, data, local, hora_inicio, hora_final, preco)
-VALUES ('111111111', TO_DATE('2024-06-01','YYYY-MM-DD'), 'Rua das Flores 1, Lisboa',
-        TO_DATE('2024-06-01 09:00','YYYY-MM-DD HH24:MI'),
-        TO_DATE('2024-06-01 18:00','YYYY-MM-DD HH24:MI'), 80.00);
+INSERT INTO Servicos (nCC, data, local, hora_inicio, hora_fim, preco)
+VALUES ('100000001', TO_DATE('2024-01-10','YYYY-MM-DD'), 'Rua das Flores 10, Lisboa',
+        TO_DATE('2024-01-10 09:00','YYYY-MM-DD HH24:MI'),
+        TO_DATE('2024-01-10 17:00','YYYY-MM-DD HH24:MI'), 80.00);
 
-INSERT INTO Servicos (nCC, data, local, hora_inicio, hora_final, preco)
-VALUES ('222222222', TO_DATE('2024-06-05','YYYY-MM-DD'), 'Av. da Liberdade 200, Porto',
-        TO_DATE('2024-06-05 14:00','YYYY-MM-DD HH24:MI'),
-        TO_DATE('2024-06-05 20:00','YYYY-MM-DD HH24:MI'), 120.00);
+INSERT INTO Servicos (nCC, data, local, hora_inicio, hora_fim, preco)
+VALUES ('100000002', TO_DATE('2024-02-14','YYYY-MM-DD'), 'Av. da Liberdade 55, Porto',
+        TO_DATE('2024-02-14 15:00','YYYY-MM-DD HH24:MI'),
+        TO_DATE('2024-02-14 21:00','YYYY-MM-DD HH24:MI'), 150.00);
 
-INSERT INTO Servicos (nCC, data, local, hora_inicio, hora_final, preco)
-VALUES ('333333333', TO_DATE('2024-06-10','YYYY-MM-DD'), 'Rua do Sol 45, Setubal',
-        TO_DATE('2024-06-10 10:00','YYYY-MM-DD HH24:MI'),
-        TO_DATE('2024-06-10 16:00','YYYY-MM-DD HH24:MI'), 150.00);
+INSERT INTO Servicos (nCC, data, local, hora_inicio, hora_fim, preco)
+VALUES ('100000003', TO_DATE('2024-03-05','YYYY-MM-DD'), 'Rua do Sol 8, Setubal',
+        TO_DATE('2024-03-05 10:00','YYYY-MM-DD HH24:MI'),
+        TO_DATE('2024-03-05 18:00','YYYY-MM-DD HH24:MI'), 200.00);
+
+INSERT INTO Servicos (nCC, data, local, hora_inicio, hora_fim, preco)
+VALUES ('100000004', TO_DATE('2024-03-20','YYYY-MM-DD'), 'Travessa da Paz 3, Braga',
+        TO_DATE('2024-03-20 11:00','YYYY-MM-DD HH24:MI'),
+        TO_DATE('2024-03-20 19:00','YYYY-MM-DD HH24:MI'), 180.00);
+
+INSERT INTO Servicos (nCC, data, local, hora_inicio, hora_fim, preco)
+VALUES ('100000005', TO_DATE('2024-04-12','YYYY-MM-DD'), 'Rua Nova 22, Coimbra',
+        TO_DATE('2024-04-12 09:00','YYYY-MM-DD HH24:MI'),
+        TO_DATE('2024-04-12 13:00','YYYY-MM-DD HH24:MI'), 60.00);
+
+INSERT INTO Servicos (nCC, data, local, hora_inicio, hora_fim, preco)
+VALUES ('100000001', TO_DATE('2024-05-01','YYYY-MM-DD'), 'Rua das Flores 10, Lisboa',
+        TO_DATE('2024-05-01 14:00','YYYY-MM-DD HH24:MI'),
+        TO_DATE('2024-05-01 20:00','YYYY-MM-DD HH24:MI'), 120.00);
+
+INSERT INTO Servicos (nCC, data, local, hora_inicio, hora_fim, preco)
+VALUES ('100000002', TO_DATE('2024-06-15','YYYY-MM-DD'), 'Salão Festas Porto, Porto',
+        TO_DATE('2024-06-15 10:00','YYYY-MM-DD HH24:MI'),
+        TO_DATE('2024-06-15 18:00','YYYY-MM-DD HH24:MI'), 350.00);
+
+INSERT INTO Servicos (nCC, data, local, hora_inicio, hora_fim, preco)
+VALUES ('100000003', TO_DATE('2024-07-20','YYYY-MM-DD'), 'Parque das Nacoes, Lisboa',
+        TO_DATE('2024-07-20 09:00','YYYY-MM-DD HH24:MI'),
+        TO_DATE('2024-07-20 17:00','YYYY-MM-DD HH24:MI'), 250.00);
+
+INSERT INTO Servicos (nCC, data, local, hora_inicio, hora_fim, preco)
+VALUES ('100000006', TO_DATE('2024-08-10','YYYY-MM-DD'), 'Av. do Mar 100, Faro',
+        TO_DATE('2024-08-10 18:00','YYYY-MM-DD HH24:MI'),
+        TO_DATE('2024-08-10 23:00','YYYY-MM-DD HH24:MI'), 90.00);
+
+INSERT INTO Servicos (nCC, data, local, hora_inicio, hora_fim, preco)
+VALUES ('100000005', TO_DATE('2024-09-05','YYYY-MM-DD'), 'Centro Coimbra, Coimbra',
+        TO_DATE('2024-09-05 10:00','YYYY-MM-DD HH24:MI'),
+        TO_DATE('2024-09-05 16:00','YYYY-MM-DD HH24:MI'), 160.00);
 
 -- ============================================================
--- Babysitting (id_servico = 1)
+-- Babysitting (servicos 1, 5, 6, 9)
 -- ============================================================
-INSERT INTO Babysitting VALUES (1, TO_DATE('2024-06-01 20:00','YYYY-MM-DD HH24:MI'));
+INSERT INTO Babysitting VALUES (1, TO_DATE('2024-01-10 21:00','YYYY-MM-DD HH24:MI'));
+INSERT INTO Babysitting VALUES (5, TO_DATE('2024-04-12 12:00','YYYY-MM-DD HH24:MI'));
+INSERT INTO Babysitting VALUES (6, TO_DATE('2024-05-01 19:00','YYYY-MM-DD HH24:MI'));
+INSERT INTO Babysitting VALUES (9, TO_DATE('2024-08-10 22:00','YYYY-MM-DD HH24:MI'));
 
 -- ============================================================
--- Festas (id_servico = 3)
+-- Festas (servicos 2, 7)
 -- ============================================================
-INSERT INTO Festas VALUES (3, 'Dinossauros');
+INSERT INTO Festas VALUES (2, 'Super Herois');
+INSERT INTO Festas VALUES (7, 'Princesas');
 
 -- ============================================================
--- Eventos (id_servico = 2)
+-- Eventos (servicos 3, 4, 8, 10)
 -- ============================================================
-INSERT INTO Eventos VALUES (2, 'Aniversário');
+INSERT INTO Eventos VALUES (3,  'Piquenique');
+INSERT INTO Eventos VALUES (4,  'Passeio ao Parque');
+INSERT INTO Eventos VALUES (8,  'Visita ao Jardim Zoologico');
+INSERT INTO Eventos VALUES (10, 'Dia de Jogos');
 
 -- ============================================================
 -- Inventario
 -- ============================================================
-INSERT INTO Inventario (nome_item, quantidade) VALUES ('Baloes',      100);
-INSERT INTO Inventario (nome_item, quantidade) VALUES ('Toalhas',      20);
-INSERT INTO Inventario (nome_item, quantidade) VALUES ('Jogos de mesa', 10);
+INSERT INTO Inventario (nome_item, quantidade) VALUES ('Baloes',          200);
+INSERT INTO Inventario (nome_item, quantidade) VALUES ('Toalhas',          30);
+INSERT INTO Inventario (nome_item, quantidade) VALUES ('Jogos de mesa',    15);
+INSERT INTO Inventario (nome_item, quantidade) VALUES ('Fatos de heroi',   10);
+INSERT INTO Inventario (nome_item, quantidade) VALUES ('Tiaras',           20);
+INSERT INTO Inventario (nome_item, quantidade) VALUES ('Pinceis pintura',  50);
+INSERT INTO Inventario (nome_item, quantidade) VALUES ('Tintas',           40);
+INSERT INTO Inventario (nome_item, quantidade) VALUES ('Cestos piquenique', 8);
 
 -- ============================================================
 -- Participam
 -- ============================================================
-INSERT INTO Participam VALUES (1, '666666666');
-INSERT INTO Participam VALUES (3, '777777777');
+INSERT INTO Participam VALUES (1,  '300000001');
+INSERT INTO Participam VALUES (1,  '300000002');
+INSERT INTO Participam VALUES (2,  '300000003');
+INSERT INTO Participam VALUES (3,  '300000004');
+INSERT INTO Participam VALUES (4,  '300000005');
+INSERT INTO Participam VALUES (5,  '300000001');
+INSERT INTO Participam VALUES (6,  '300000002');
+INSERT INTO Participam VALUES (7,  '300000003');
+INSERT INTO Participam VALUES (8,  '300000004');
+INSERT INTO Participam VALUES (9,  '300000005');
+INSERT INTO Participam VALUES (10, '300000001');
 
 -- ============================================================
 -- Trabalham
 -- ============================================================
-INSERT INTO Trabalham VALUES ('444444444', 1, 60.00, 9.0);
-INSERT INTO Trabalham VALUES ('555555555', 3, 90.00, 6.0);
+INSERT INTO Trabalham VALUES ('200000001', 1,  60.00, 8.0);
+INSERT INTO Trabalham VALUES ('200000002', 2,  90.00, 6.0);
+INSERT INTO Trabalham VALUES ('200000003', 3, 100.00, 8.0);
+INSERT INTO Trabalham VALUES ('200000004', 4,  80.00, 8.0);
+INSERT INTO Trabalham VALUES ('200000001', 5,  40.00, 4.0);
+INSERT INTO Trabalham VALUES ('200000002', 6,  70.00, 6.0);
+INSERT INTO Trabalham VALUES ('200000004', 7, 150.00, 8.0);
+INSERT INTO Trabalham VALUES ('200000003', 8, 120.00, 8.0);
+INSERT INTO Trabalham VALUES ('200000001', 9,  50.00, 5.0);
+INSERT INTO Trabalham VALUES ('200000002', 10, 80.00, 6.0);
 
 -- ============================================================
 -- Utilizam
 -- ============================================================
-INSERT INTO Utilizam VALUES (3, 1, 30);  -- Festa usa 30 baloes
-INSERT INTO Utilizam VALUES (3, 3,  2);  -- Festa usa 2 jogos de mesa
+INSERT INTO Utilizam VALUES (2,  1, 50);  -- Super Herois usa baloes
+INSERT INTO Utilizam VALUES (2,  4, 5);   -- Super Herois usa fatos de heroi
+INSERT INTO Utilizam VALUES (7,  1, 80);  -- Princesas usa baloes
+INSERT INTO Utilizam VALUES (7,  5, 10);  -- Princesas usa tiaras
+INSERT INTO Utilizam VALUES (3,  8, 3);   -- Piquenique usa cestos
+INSERT INTO Utilizam VALUES (3,  2, 5);   -- Piquenique usa toalhas
+INSERT INTO Utilizam VALUES (8,  6, 10);  -- Zoo usa pinceis
+INSERT INTO Utilizam VALUES (8,  7, 8);   -- Zoo usa tintas
+INSERT INTO Utilizam VALUES (10, 3, 5);   -- Jogos usa jogos de mesa
 
 -- ============================================================
 -- PagamentoCliente
 -- ============================================================
 INSERT INTO PagamentoCliente (id_servico, nCC, valor, metodo, data_pag)
-VALUES (1, '111111111', 80.00,  'MBWay',       TO_DATE('2024-06-01','YYYY-MM-DD'));
+VALUES (1,  '100000001',  80.00, 'MBWay',        TO_DATE('2024-01-10','YYYY-MM-DD'));
 INSERT INTO PagamentoCliente (id_servico, nCC, valor, metodo, data_pag)
-VALUES (2, '222222222', 120.00, 'Multibanco',   TO_DATE('2024-06-05','YYYY-MM-DD'));
+VALUES (2,  '100000002', 150.00, 'Multibanco',    TO_DATE('2024-02-14','YYYY-MM-DD'));
 INSERT INTO PagamentoCliente (id_servico, nCC, valor, metodo, data_pag)
-VALUES (3, '333333333', 150.00, 'Transferencia',TO_DATE('2024-06-10','YYYY-MM-DD'));
+VALUES (3,  '100000003', 200.00, 'Transferencia', TO_DATE('2024-03-05','YYYY-MM-DD'));
+INSERT INTO PagamentoCliente (id_servico, nCC, valor, metodo, data_pag)
+VALUES (4,  '100000004', 180.00, 'Numerario',     TO_DATE('2024-03-20','YYYY-MM-DD'));
+INSERT INTO PagamentoCliente (id_servico, nCC, valor, metodo, data_pag)
+VALUES (5,  '100000005',  60.00, 'MBWay',         TO_DATE('2024-04-12','YYYY-MM-DD'));
+INSERT INTO PagamentoCliente (id_servico, nCC, valor, metodo, data_pag)
+VALUES (6,  '100000001', 120.00, 'Multibanco',    TO_DATE('2024-05-01','YYYY-MM-DD'));
+INSERT INTO PagamentoCliente (id_servico, nCC, valor, metodo, data_pag)
+VALUES (7,  '100000002', 350.00, 'Transferencia', TO_DATE('2024-06-15','YYYY-MM-DD'));
+INSERT INTO PagamentoCliente (id_servico, nCC, valor, metodo, data_pag)
+VALUES (8,  '100000003', 250.00, 'Credito',       TO_DATE('2024-07-20','YYYY-MM-DD'));
+INSERT INTO PagamentoCliente (id_servico, nCC, valor, metodo, data_pag)
+VALUES (9,  '100000006',  90.00, 'MBWay',         TO_DATE('2024-08-10','YYYY-MM-DD'));
+INSERT INTO PagamentoCliente (id_servico, nCC, valor, metodo, data_pag)
+VALUES (10, '100000005', 160.00, 'Numerario',     TO_DATE('2024-09-05','YYYY-MM-DD'));
 
 -- ============================================================
 -- Avaliacoes
 -- ============================================================
 INSERT INTO Avaliacoes (id_servico, nCC, classificacao, comentario, data_avaliacao)
-VALUES (1, '111111111', 5, 'Excelente serviço, muito profissional!', TO_DATE('2024-06-02','YYYY-MM-DD'));
+VALUES (1,  '100000001', 5, 'Excelente! A Filipa foi incrível com os meus filhos.',   TO_DATE('2024-01-11','YYYY-MM-DD'));
 INSERT INTO Avaliacoes (id_servico, nCC, classificacao, comentario, data_avaliacao)
-VALUES (2, '222222222', 4, 'Muito bom, recomendo.', TO_DATE('2024-06-06','YYYY-MM-DD'));
+VALUES (2,  '100000002', 4, 'Festa muito bem organizada, as crianças adoraram.',       TO_DATE('2024-02-15','YYYY-MM-DD'));
 INSERT INTO Avaliacoes (id_servico, nCC, classificacao, comentario, data_avaliacao)
-VALUES (3, '333333333', 5, 'Festa incrível, as crianças adoraram!', TO_DATE('2024-06-11','YYYY-MM-DD'));
+VALUES (3,  '100000003', 5, 'Piquenique fantástico, muito bem preparado.',             TO_DATE('2024-03-06','YYYY-MM-DD'));
+INSERT INTO Avaliacoes (id_servico, nCC, classificacao, comentario, data_avaliacao)
+VALUES (4,  '100000004', 3, 'Bom serviço mas podia ter mais atividades.',              TO_DATE('2024-03-21','YYYY-MM-DD'));
+INSERT INTO Avaliacoes (id_servico, nCC, classificacao, comentario, data_avaliacao)
+VALUES (5,  '100000005', 5, 'Muito profissional e carinhosa com as crianças.',         TO_DATE('2024-04-13','YYYY-MM-DD'));
+INSERT INTO Avaliacoes (id_servico, nCC, classificacao, comentario, data_avaliacao)
+VALUES (6,  '100000001', 4, 'Bom serviço, voltaria a contratar.',                     TO_DATE('2024-05-02','YYYY-MM-DD'));
+INSERT INTO Avaliacoes (id_servico, nCC, classificacao, comentario, data_avaliacao)
+VALUES (7,  '100000002', 5, 'Festa de princesas perfeita! Superou as expectativas.',   TO_DATE('2024-06-16','YYYY-MM-DD'));
+INSERT INTO Avaliacoes (id_servico, nCC, classificacao, comentario, data_avaliacao)
+VALUES (8,  '100000003', 4, 'Visita ao zoo muito bem organizada.',                     TO_DATE('2024-07-21','YYYY-MM-DD'));
+INSERT INTO Avaliacoes (id_servico, nCC, classificacao, comentario, data_avaliacao)
+VALUES (9,  '100000006', 2, 'Serviço razoável, esperava mais.',                        TO_DATE('2024-08-11','YYYY-MM-DD'));
+INSERT INTO Avaliacoes (id_servico, nCC, classificacao, comentario, data_avaliacao)
+VALUES (10, '100000005', 5, 'Dia de jogos incrível, as crianças pediram para repetir!',TO_DATE('2024-09-06','YYYY-MM-DD'));
 
 COMMIT;
