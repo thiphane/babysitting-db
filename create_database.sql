@@ -1,13 +1,10 @@
--- ============================================================
--- DROP triggers
--- ============================================================
+
+
 DROP TRIGGER trg_utilizam_stock;
 DROP TRIGGER trg_trabalham_horas;
 DROP TRIGGER trg_babysitting_hora_dormir;
 
--- ============================================================
--- DROP tables (ordem inversa das dependências)
--- ============================================================
+
 DROP TABLE Utilizam         CASCADE CONSTRAINTS;
 DROP TABLE Trabalham        CASCADE CONSTRAINTS;
 DROP TABLE Participam       CASCADE CONSTRAINTS;
@@ -27,9 +24,7 @@ DROP TABLE Clientes         CASCADE CONSTRAINTS;
 DROP TABLE Adultos          CASCADE CONSTRAINTS;
 DROP TABLE Pessoas          CASCADE CONSTRAINTS;
 
--- ============================================================
--- CREATE tables
--- ============================================================
+
 CREATE TABLE Pessoas (
     nCC         VARCHAR2(20)    NOT NULL,
     nome        VARCHAR2(100)   NOT NULL,
@@ -258,9 +253,8 @@ BEGIN
     END IF;
 END;
 /
--- ============================================================
--- Pessoas (15 pessoas: 6 clientes, 4 trabalhadores, 5 crianças)
--- ============================================================
+
+--PESSOAS
 INSERT INTO Pessoas VALUES ('100000001', 'Maria João Silva');
 INSERT INTO Pessoas VALUES ('100000002', 'António Ferreira');
 INSERT INTO Pessoas VALUES ('100000003', 'Beatriz Santos');
@@ -277,9 +271,7 @@ INSERT INTO Pessoas VALUES ('300000003', 'Rodrigo Santos');    -- criança
 INSERT INTO Pessoas VALUES ('300000004', 'Leonor Oliveira');   -- criança
 INSERT INTO Pessoas VALUES ('300000005', 'Mateus Costa');      -- criança
 
--- ============================================================
--- Adultos
--- ============================================================
+--ADULTOS
 INSERT INTO Adultos VALUES ('100000001', 'maria.silva@gmail.com',     '911000001');
 INSERT INTO Adultos VALUES ('100000002', 'antonio.ferreira@gmail.com','911000002');
 INSERT INTO Adultos VALUES ('100000003', 'beatriz.santos@gmail.com',  '911000003');
@@ -291,9 +283,7 @@ INSERT INTO Adultos VALUES ('200000002', 'goncalo.per@gmail.com',     '922000002
 INSERT INTO Adultos VALUES ('200000003', 'helena.sousa@gmail.com',    '922000003');
 INSERT INTO Adultos VALUES ('200000004', 'ivo.carvalho@gmail.com',    '922000004');
 
--- ============================================================
--- Clientes
--- ============================================================
+--CLIENTES
 INSERT INTO Clientes VALUES ('100000001', 'Rua das Flores 10, Lisboa');
 INSERT INTO Clientes VALUES ('100000002', 'Av. da Liberdade 55, Porto');
 INSERT INTO Clientes VALUES ('100000003', 'Rua do Sol 8, Setubal');
@@ -301,17 +291,13 @@ INSERT INTO Clientes VALUES ('100000004', 'Travessa da Paz 3, Braga');
 INSERT INTO Clientes VALUES ('100000005', 'Rua Nova 22, Coimbra');
 INSERT INTO Clientes VALUES ('100000006', 'Av. do Mar 100, Faro');
 
--- ============================================================
--- Trabalhadores
--- ============================================================
+--TRABALHADORES
 INSERT INTO Trabalhadores VALUES ('200000001', 'Educadora de infância com 5 anos de experiência. Especializada em crianças dos 0-6 anos.');
 INSERT INTO Trabalhadores VALUES ('200000002', 'Estudante de psicologia. Experiência em babysitting há 3 anos.');
 INSERT INTO Trabalhadores VALUES ('200000003', 'Professora primária reformada. Excelente com crianças em idade escolar.');
 INSERT INTO Trabalhadores VALUES ('200000004', 'Animador de festas infantis com 7 anos de experiência.');
 
--- ============================================================
--- Disponibilidade
--- ============================================================
+--DISPONIBILIDADE
 INSERT INTO Disponibilidade (nCC, dia_semana, hora_inicio, hora_fim) VALUES ('200000001', 'Segunda', TO_DATE('08:00','HH24:MI'), TO_DATE('18:00','HH24:MI'));
 INSERT INTO Disponibilidade (nCC, dia_semana, hora_inicio, hora_fim) VALUES ('200000001', 'Terca',   TO_DATE('08:00','HH24:MI'), TO_DATE('18:00','HH24:MI'));
 INSERT INTO Disponibilidade (nCC, dia_semana, hora_inicio, hora_fim) VALUES ('200000001', 'Quarta',  TO_DATE('08:00','HH24:MI'), TO_DATE('18:00','HH24:MI'));
@@ -324,18 +310,14 @@ INSERT INTO Disponibilidade (nCC, dia_semana, hora_inicio, hora_fim) VALUES ('20
 INSERT INTO Disponibilidade (nCC, dia_semana, hora_inicio, hora_fim) VALUES ('200000004', 'Sabado',  TO_DATE('10:00','HH24:MI'), TO_DATE('22:00','HH24:MI'));
 INSERT INTO Disponibilidade (nCC, dia_semana, hora_inicio, hora_fim) VALUES ('200000004', 'Domingo', TO_DATE('10:00','HH24:MI'), TO_DATE('22:00','HH24:MI'));
 
--- ============================================================
--- Criancas
--- ============================================================
+--CRIANCAS
 INSERT INTO Criancas VALUES ('300000001', '100000001', TO_DATE('2018-03-10','YYYY-MM-DD'));
 INSERT INTO Criancas VALUES ('300000002', '100000001', TO_DATE('2020-07-25','YYYY-MM-DD'));
 INSERT INTO Criancas VALUES ('300000003', '100000002', TO_DATE('2017-11-05','YYYY-MM-DD'));
 INSERT INTO Criancas VALUES ('300000004', '100000003', TO_DATE('2019-01-15','YYYY-MM-DD'));
 INSERT INTO Criancas VALUES ('300000005', '100000004', TO_DATE('2021-06-30','YYYY-MM-DD'));
 
--- ============================================================
--- TiposAlergia
--- ============================================================
+--TIPOS DE ALERGIA
 INSERT INTO TiposAlergia VALUES ('Amendoim');
 INSERT INTO TiposAlergia VALUES ('Lactose');
 INSERT INTO TiposAlergia VALUES ('Gluten');
@@ -344,9 +326,7 @@ INSERT INTO TiposAlergia VALUES ('Ovo');
 INSERT INTO TiposAlergia VALUES ('Soja');
 INSERT INTO TiposAlergia VALUES ('Frutos secos');
 
--- ============================================================
--- Alergias
--- ============================================================
+-- ALERGIAS
 INSERT INTO Alergias VALUES ('300000001', 'Amendoim');
 INSERT INTO Alergias VALUES ('300000001', 'Lactose');
 INSERT INTO Alergias VALUES ('300000002', 'Gluten');
@@ -355,9 +335,7 @@ INSERT INTO Alergias VALUES ('300000004', 'Marisco');
 INSERT INTO Alergias VALUES ('300000004', 'Frutos secos');
 INSERT INTO Alergias VALUES ('300000005', 'Soja');
 
--- ============================================================
--- Servicos (10 serviços)
--- ============================================================
+--SERVICOS
 INSERT INTO Servicos (nCC, data, local, hora_inicio, hora_fim, preco)
 VALUES ('100000001', TO_DATE('2024-01-10','YYYY-MM-DD'), 'Rua das Flores 10, Lisboa',
         TO_DATE('2024-01-10 09:00','YYYY-MM-DD HH24:MI'),
@@ -408,31 +386,23 @@ VALUES ('100000005', TO_DATE('2024-09-05','YYYY-MM-DD'), 'Centro Coimbra, Coimbr
         TO_DATE('2024-09-05 10:00','YYYY-MM-DD HH24:MI'),
         TO_DATE('2024-09-05 16:00','YYYY-MM-DD HH24:MI'), 160.00);
 
--- ============================================================
--- Babysitting (servicos 1, 5, 6, 9)
--- ============================================================
+--BABYSITTING
 INSERT INTO Babysitting VALUES (1, TO_DATE('2024-01-10 21:00','YYYY-MM-DD HH24:MI'));
 INSERT INTO Babysitting VALUES (5, TO_DATE('2024-04-12 12:00','YYYY-MM-DD HH24:MI'));
 INSERT INTO Babysitting VALUES (6, TO_DATE('2024-05-01 19:00','YYYY-MM-DD HH24:MI'));
 INSERT INTO Babysitting VALUES (9, TO_DATE('2024-08-10 22:00','YYYY-MM-DD HH24:MI'));
 
--- ============================================================
--- Festas (servicos 2, 7)
--- ============================================================
+--FESTAS
 INSERT INTO Festas VALUES (2, 'Super Herois');
 INSERT INTO Festas VALUES (7, 'Princesas');
 
--- ============================================================
--- Eventos (servicos 3, 4, 8, 10)
--- ============================================================
+--EVENTOS
 INSERT INTO Eventos VALUES (3,  'Piquenique');
 INSERT INTO Eventos VALUES (4,  'Passeio ao Parque');
 INSERT INTO Eventos VALUES (8,  'Visita ao Jardim Zoologico');
 INSERT INTO Eventos VALUES (10, 'Dia de Jogos');
 
--- ============================================================
--- Inventario
--- ============================================================
+--INVENTARIO
 INSERT INTO Inventario (nome_item, quantidade) VALUES ('Baloes',          200);
 INSERT INTO Inventario (nome_item, quantidade) VALUES ('Toalhas',          30);
 INSERT INTO Inventario (nome_item, quantidade) VALUES ('Jogos de mesa',    15);
@@ -442,9 +412,7 @@ INSERT INTO Inventario (nome_item, quantidade) VALUES ('Pinceis pintura',  50);
 INSERT INTO Inventario (nome_item, quantidade) VALUES ('Tintas',           40);
 INSERT INTO Inventario (nome_item, quantidade) VALUES ('Cestos piquenique', 8);
 
--- ============================================================
--- Participam
--- ============================================================
+--PARTICIPAM
 INSERT INTO Participam VALUES (1,  '300000001');
 INSERT INTO Participam VALUES (1,  '300000002');
 INSERT INTO Participam VALUES (2,  '300000003');
@@ -457,9 +425,7 @@ INSERT INTO Participam VALUES (8,  '300000004');
 INSERT INTO Participam VALUES (9,  '300000005');
 INSERT INTO Participam VALUES (10, '300000001');
 
--- ============================================================
--- Trabalham
--- ============================================================
+-- TRABALHAM
 INSERT INTO Trabalham VALUES ('200000001', 1,  60.00, 8.0);
 INSERT INTO Trabalham VALUES ('200000002', 2,  90.00, 6.0);
 INSERT INTO Trabalham VALUES ('200000003', 3, 100.00, 8.0);
@@ -471,9 +437,7 @@ INSERT INTO Trabalham VALUES ('200000003', 8, 120.00, 8.0);
 INSERT INTO Trabalham VALUES ('200000001', 9,  50.00, 5.0);
 INSERT INTO Trabalham VALUES ('200000002', 10, 80.00, 6.0);
 
--- ============================================================
--- Utilizam
--- ============================================================
+-- UTILIZAM
 INSERT INTO Utilizam VALUES (2,  1, 50);  -- Super Herois usa baloes
 INSERT INTO Utilizam VALUES (2,  4, 5);   -- Super Herois usa fatos de heroi
 INSERT INTO Utilizam VALUES (7,  1, 80);  -- Princesas usa baloes
@@ -484,9 +448,7 @@ INSERT INTO Utilizam VALUES (8,  6, 10);  -- Zoo usa pinceis
 INSERT INTO Utilizam VALUES (8,  7, 8);   -- Zoo usa tintas
 INSERT INTO Utilizam VALUES (10, 3, 5);   -- Jogos usa jogos de mesa
 
--- ============================================================
--- PagamentoCliente
--- ============================================================
+-- PAGAMENTO
 INSERT INTO PagamentoCliente (id_servico, nCC, valor, metodo, data_pag)
 VALUES (1,  '100000001',  80.00, 'MBWay',        TO_DATE('2024-01-10','YYYY-MM-DD'));
 INSERT INTO PagamentoCliente (id_servico, nCC, valor, metodo, data_pag)
@@ -508,9 +470,7 @@ VALUES (9,  '100000006',  90.00, 'MBWay',         TO_DATE('2024-08-10','YYYY-MM-
 INSERT INTO PagamentoCliente (id_servico, nCC, valor, metodo, data_pag)
 VALUES (10, '100000005', 160.00, 'Numerario',     TO_DATE('2024-09-05','YYYY-MM-DD'));
 
--- ============================================================
--- Avaliacoes
--- ============================================================
+--AVALIACOES
 INSERT INTO Avaliacoes (id_servico, nCC, classificacao, comentario, data_avaliacao)
 VALUES (1,  '100000001', 5, 'Excelente! A Filipa foi incrível com os meus filhos.',   TO_DATE('2024-01-11','YYYY-MM-DD'));
 INSERT INTO Avaliacoes (id_servico, nCC, classificacao, comentario, data_avaliacao)
