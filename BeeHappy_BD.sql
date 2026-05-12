@@ -2,7 +2,8 @@
 -- DROP triggers
 -- ============================================================
 drop trigger trg_check_horas_dormir;
-drop trigger trg_utilizam_stock;
+drop trigger trg_check_stock;
+drop trigger trg_updatde_stock;
 
 -- ============================================================
 -- DROP tables 
@@ -235,6 +236,16 @@ begin
 	if :new.quantidade_gasta > v_stock then
 		raise_application_error(-20002, 'Quantidade gasta excede o stock disponível.');
 	end if;
+end;
+/
+
+create or replace trigger trg_updatde_stock
+after insert on Utilizam
+for each row
+begin
+	update Inventario
+	set quantidade = quantidade - :new.quantidade_gasta
+	where id_item = :new.id_item;
 end;
 /
 
