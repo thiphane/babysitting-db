@@ -41,7 +41,7 @@ create table Adultos (
 	num_telefone number(9) not null,
 	constraint pk_adultos primary key (nCC_adulto),
 	constraint fk_adultos_pessoas foreign key (nCC_adulto) 
-        references Pessoas(nCC) on delete cascade
+    references Pessoas(nCC) on delete cascade
 );
 
 create table Trabalhadores (
@@ -49,7 +49,7 @@ create table Trabalhadores (
 	cv varchar2(1000) not null,
 	constraint pk_trabalhadores primary key (nCC_trabalhador), 
 	constraint fk_trabalhadores_adultos foreign key (nCC_trabalhador) 
-        references Adultos(nCC_adulto) on delete cascade
+    references Adultos(nCC_adulto) on delete cascade
 );
 
 create table Clientes (
@@ -57,7 +57,7 @@ create table Clientes (
 	morada varchar2(100) not null,
 	constraint pk_clientes primary key (nCC_cliente),
 	constraint fk_clientes_adultos foreign key (nCC_cliente) 
-        references Adultos(nCC_adulto) on delete cascade
+    references Adultos(nCC_adulto) on delete cascade
 );
 
 create table Criancas (
@@ -66,9 +66,9 @@ create table Criancas (
 	data_nascimento date not null,
 	constraint pk_criancas primary key (nCC_crianca),
 	constraint fk_criancas_pessoas foreign key (nCC_crianca) 
-        references Pessoas(nCC) on delete cascade,
+  	references Pessoas(nCC) on delete cascade,
 	constraint fk_criancas_clientes foreign key (nCC_cliente) 
-        references Clientes(nCC_cliente)
+    references Clientes(nCC_cliente)
 );
 
 create table Servicos (
@@ -81,7 +81,7 @@ create table Servicos (
 	preco_servico number(4,2) not null,
 	constraint pk_servicos primary key (id_servico),
 	constraint fk_servicos_clientes foreign key (nCC_cliente) 
-        references Clientes(nCC_cliente),
+    references Clientes(nCC_cliente),
 	constraint ck_servicos_horas check (hora_fim > hora_inicio),
 	constraint ck_servicos_preco check (preco_servico > 0)
 );
@@ -91,7 +91,7 @@ create table Eventos (
 	tipo_evento varchar2(100) not null,
 	constraint pk_eventos primary key (id_evento),
 	constraint fk_eventos_servicos foreign key (id_evento) 
-        references Servicos(id_servico) on delete cascade
+    references Servicos(id_servico) on delete cascade
 );
 
 create table Festas (
@@ -99,7 +99,7 @@ create table Festas (
 	tema_festa varchar2(100) not null,
 	constraint pk_festas primary key (id_festa),
 	constraint fk_festas_servicos foreign key (id_festa) 
-        references Servicos(id_servico) on delete cascade
+    references Servicos(id_servico) on delete cascade
 );
 
 create table Babysitting (
@@ -107,7 +107,7 @@ create table Babysitting (
 	horas_dormir date not null,
 	constraint pk_babysitting primary key (id_babysitting),
 	constraint fk_babysitting_servicos foreign key (id_babysitting) 
-        references Servicos(id_servico) on delete cascade 
+    references Servicos(id_servico) on delete cascade 
 );
 
 create table Disponibilidade (
@@ -118,7 +118,7 @@ create table Disponibilidade (
 	hora_fim date not null,
 	constraint pk_disp primary key (id_disp),
 	constraint fk_disp_trabalhadores foreign key (nCC_trabalhador) 
-        references Trabalhadores(nCC_trabalhador),
+    references Trabalhadores(nCC_trabalhador),
 	constraint ck_disp_horas check (hora_fim > hora_inicio),
 	constraint ck_disp_dia check (dia_semana in ('Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'))
 );
@@ -128,7 +128,7 @@ create table Alergias (
 	alergia varchar2(100) not null,
 	constraint pk_alergias primary key (nCC_crianca, alergia),
 	constraint fk_alergias_criancas foreign key (nCC_crianca) 
-        references Criancas(nCC_crianca)
+    references Criancas(nCC_crianca)
 );
 
 create table Inventario (
@@ -147,9 +147,9 @@ create table PagamentoCliente (
 	data_pag date not null,
 	constraint pk_pagamento primary key (id_pagamento),
 	constraint fk_pagamento_servicos foreign key (id_servico) 
-        references Servicos(id_servico),
+    references Servicos(id_servico),
 	constraint fk_pagamento_clientes foreign key (nCC_cliente) 
-        references Clientes(nCC_cliente),
+    references Clientes(nCC_cliente),
 	constraint ck_pagamento_valor check (valor > 0),
 	constraint ck_pagamento_metodo check (metodo in ('Multibanco', 'MBWay', 'Transferencia', 'Numerario'))
 );
@@ -162,9 +162,9 @@ create table Avaliam (
 	data_avaliacao date not null,
 	constraint pk_alvaliam primary key (id_servico, nCC_cliente),
 	constraint fk_avaliam_servicos foreign key (id_servico) 
-        references Servicos(id_servico),
+    references Servicos(id_servico),
 	constraint fk_avaliam_clientes foreign key (nCC_cliente)     
-        references Clientes(nCC_cliente),
+    references Clientes(nCC_cliente),
 	constraint ck_avaliam_classificacao check (classificacao between 1 and 5)
 ); 
 
@@ -173,9 +173,9 @@ create table Participam (
 	nCC_crianca number(9) not null,
 	constraint pk_participam primary key (id_servico, nCC_crianca),
 	constraint fk_participam_servicos foreign key (id_servico) 
-        references Servicos(id_servico),
+    references Servicos(id_servico),
 	constraint fk_participam_criancas foreign key (nCC_crianca) 
-        references Criancas(nCC_crianca)
+    references Criancas(nCC_crianca)
 );
 
 create table Trabalham (
@@ -184,9 +184,9 @@ create table Trabalham (
 	valor_recebido number not null,
 	constraint pk_trabalham primary key (nCC_trabalhador, id_servico),
 	constraint fk_trabalham_trabalhadores foreign key (nCC_trabalhador) 
-        references Trabalhadores(nCC_trabalhador),
+    references Trabalhadores(nCC_trabalhador),
 	constraint fk_trabalham_servicos foreign key (id_servico) 
-        references Servicos(id_servico),
+    references Servicos(id_servico),
 	constraint ck_trabalham_valor check (valor_recebido > 0)
 );
 
@@ -196,9 +196,9 @@ create table Utilizam (
 	quantidade_gasta number not null,
 	constraint pk_utilizam primary key (id_servico, id_item),
 	constraint fk_utilizam_servicos foreign key (id_servico) 
-        references Servicos(id_servico),
+    references Servicos(id_servico),
 	constraint fk_utilizam_inventario foreign key (id_item) 
-        references Inventario(id_item),
+    references Inventario(id_item),
 	constraint ck_utilizam_quantidade check (quantidade_gasta > 0)
 );
 
@@ -248,9 +248,5 @@ begin
 	where id_item = :new.id_item;
 end;
 /
-
--- ============================================================
--- INSERTS
--- ============================================================
 
 commit;
