@@ -248,5 +248,110 @@ begin
 	where id_item = :new.id_item;
 end;
 /
+-- CREATE views
+create or replace view vw_clientes_form as
+select
+    p.nCC,
+    p.nome,
+    a.email,
+    a.num_telefone,
+    c.morada
+from Pessoas p
+join Adultos  a on a.nCC_adulto   = p.nCC
+join Clientes c on c.nCC_cliente  = a.nCC_adulto;
+
+create or replace view vw_trabalhadores_form as
+select
+    p.nCC,
+    p.nome,
+    a.email,
+    a.num_telefone,
+    t.cv
+from Pessoas p
+join Adultos       a on a.nCC_adulto       = p.nCC
+join Trabalhadores t on t.nCC_trabalhador  = a.nCC_adulto;
+
+create or replace view vw_criancas_form as
+select
+    p.nCC,
+    p.nome,
+    c.nCC_cliente,
+    c.data_nascimento
+from Pessoas p
+join Criancas c on c.nCC_crianca = p.nCC;
+
+
+-- CREATE triggers das views (INSTEAD OF INSERT)
+create or replace trigger trg_instead_of_insert_cliente
+instead of insert on vw_clientes_form
+for each row
+begin
+    insert into Pessoas (nCC, nome)
+    values (:new.nCC, :new.nome);
+
+    insert into Adultos (nCC_adulto, email, num_telefone)
+    values (:new.nCC, :new.email, :new.num_telefone);
+
+    insert into Clientes (nCC_cliente, morada)
+    values (:new.nCC, :new.morada);
+end;
+/
+
+create or replace trigger trg_instead_of_insert_trabalhador
+instead of insert on vw_trabalhadores_form
+for each row
+begin
+    insert into Pessoas (nCC, nome)
+    values (:new.nCC, :new.nome);
+
+    insert into Adultos (nCC_adulto, email, num_telefone)
+    values (:new.nCC, :new.email, :new.num_telefone);
+
+    insert into Trabalhadores (nCC_trabalhador, cv)
+    values (:new.nCC, :new.cv);
+end;
+/
+
+create or replace trigger trg_instead_of_insert_crianca
+instead of insert on vw_criancas_form
+for each row
+begin
+    insert into Pessoas (nCC, nome)
+    values (:new.nCC, :new.nome);
+
+    insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento)
+    values (:new.nCC, :new.nCC_cliente, :new.data_nascimento);
+end;
+/
+
+-- CREATE triggers das views (INSTEAD OF UPDATE)
+create or replace trigger trg_instead_of_update_cliente
+instead of update on vw_clientes_form
+for each row
+begin
+    update Pessoas set nome = :new.nome where nCC = :old.nCC;
+    update Adultos set email = :new.email, num_telefone = :new.num_telefone where nCC_adulto = :old.nCC;
+    update Clientes set morada = :new.morada where nCC_cliente = :old.nCC;
+end;
+/
+
+create or replace trigger trg_instead_of_update_trabalhador
+instead of update on vw_trabalhadores_form
+for each row
+begin
+    update Pessoas set nome = :new.nome where nCC = :old.nCC;
+    update Adultos set email = :new.email, num_telefone = :new.num_telefone where nCC_adulto = :old.nCC;
+    update Trabalhadores set cv = :new.cv where nCC_trabalhador = :old.nCC;
+end;
+/
+
+create or replace trigger trg_instead_of_update_crianca
+instead of update on vw_criancas_form
+for each row
+begin
+    update Pessoas set nome = :new.nome where nCC = :old.nCC;
+    update Criancas set nCC_cliente = :new.nCC_cliente, data_nascimento = :new.data_nascimento where nCC_crianca = :old.nCC;
+end;
+/
 
 commit;
