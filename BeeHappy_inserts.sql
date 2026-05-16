@@ -294,4 +294,4 @@ SELECT * FROM Adultos WHERE nCC_adulto = 100000010;
 SELECT * FROM Trabalhadores WHERE nCC_trabalhador = 100000010;
 
 
-commit
+commit;
