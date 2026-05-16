@@ -36,67 +36,37 @@ insert into Pessoas (nCC, nome) values (300000008, 'Hugo Fonseca');
 insert into Pessoas (nCC, nome) values (300000009, 'Inês Borges');
 insert into Pessoas (nCC, nome) values (300000010, 'Jorge Castro');
 
-insert into Adultos (nCC_adulto, email, num_telefone) 
-  values (100000001, 'ana.silva@gmail.com', 912345678);
-insert into Adultos (nCC_adulto, email, num_telefone) 
-  values (100000002, 'bruno.santos@gmail.com', 912345679);  
-insert into Adultos (nCC_adulto, email, num_telefone) 
-  values (100000003, 'carlos.costa@gmail.com', 912345680);
-insert into Adultos (nCC_adulto, email, num_telefone) 
-  values (100000004, 'diana.pereira@gmail.com', 912345681);
-insert into Adultos (nCC_adulto, email, num_telefone) 
-  values (100000005, 'eduardo.martins@gmail.com', 912345682);
-insert into Adultos (nCC_adulto, email, num_telefone) 
-  values (100000006, 'filipa.gomes@gmail.com', 912345683);
-insert into Adultos (nCC_adulto, email, num_telefone) 
-  values (100000007, 'goncalo.rodrigues@gmail.com', 912345684);
-insert into Adultos (nCC_adulto, email, num_telefone) 
-  values (100000008, 'helena.ferreira@gmail.com', 912345685);
-insert into Adultos (nCC_adulto, email, num_telefone) 
-  values (100000009, 'igor.almeida@gmail.com', 912345686);
-insert into Adultos (nCC_adulto, email, num_telefone) 
-  values (100000010, 'joana.sousa@gmail.com', 912345687);
-insert into Adultos (nCC_adulto, email, num_telefone) 
-  values (200000001, 'luis.ribeiro@gmail.com', 912345688);
-insert into Adultos (nCC_adulto, email, num_telefone) 
-  values (200000002, 'margarida.carvalho@gmail.com', 912345689);
-insert into Adultos (nCC_adulto, email, num_telefone) 
-  values (200000003, 'nuno.pinto@gmail.com', 912345690);
-insert into Adultos (nCC_adulto, email, num_telefone) 
-  values (200000004, 'olivia.mendes@gmail.com', 912345691);
-insert into Adultos (nCC_adulto, email, num_telefone) 
-  values (200000005, 'paulo.teixeira@gmail.com', 912345692);
-insert into Adultos (nCC_adulto, email, num_telefone) 
-  values (200000006, 'rita.fernandes@gmail.com', 912345693);
-insert into Adultos (nCC_adulto, email, num_telefone) 
-  values (200000007, 'sergio.marques@gmail.com', 912345694);
-insert into Adultos (nCC_adulto, email, num_telefone) 
-  values (200000008, 'teresa.machado@gmail.com', 912345695);
-insert into Adultos (nCC_adulto, email, num_telefone) 
-  values (20000009, 'vitor.neves@gmail.com', 912345696);
-insert into Adultos (nCC_adulto, email, num_telefone) 
-  values (200000010, 'zelia.lopes@gmail.com', 912345697);
+insert into Adultos (nCC_adulto, email, num_telefone) values (100000001, 'ana.silva@gmail.com', 912345678);
+insert into Adultos (nCC_adulto, email, num_telefone) values (100000002, 'bruno.santos@gmail.com', 912345679);  
+insert into Adultos (nCC_adulto, email, num_telefone) values (100000003, 'carlos.costa@gmail.com', 912345680);
+insert into Adultos (nCC_adulto, email, num_telefone) values (100000004, 'diana.pereira@gmail.com', 912345681);
+insert into Adultos (nCC_adulto, email, num_telefone) values (100000005, 'eduardo.martins@gmail.com', 912345682);
+insert into Adultos (nCC_adulto, email, num_telefone) values (100000006, 'filipa.gomes@gmail.com', 912345683);
+insert into Adultos (nCC_adulto, email, num_telefone) values (100000007, 'goncalo.rodrigues@gmail.com', 912345684);
+insert into Adultos (nCC_adulto, email, num_telefone) values (100000008, 'helena.ferreira@gmail.com', 912345685);
+insert into Adultos (nCC_adulto, email, num_telefone) values (100000009, 'igor.almeida@gmail.com', 912345686);
+insert into Adultos (nCC_adulto, email, num_telefone) values (100000010, 'joana.sousa@gmail.com', 912345687);
+insert into Adultos (nCC_adulto, email, num_telefone) values (200000001, 'luis.ribeiro@gmail.com', 912345688);
+insert into Adultos (nCC_adulto, email, num_telefone) values (200000002, 'margarida.carvalho@gmail.com', 912345689);
+insert into Adultos (nCC_adulto, email, num_telefone) values (200000003, 'nuno.pinto@gmail.com', 912345690);
+insert into Adultos (nCC_adulto, email, num_telefone) values (200000004, 'olivia.mendes@gmail.com', 912345691);
+insert into Adultos (nCC_adulto, email, num_telefone) values (200000005, 'paulo.teixeira@gmail.com', 912345692);
+insert into Adultos (nCC_adulto, email, num_telefone) values (200000006, 'rita.fernandes@gmail.com', 912345693);
+insert into Adultos (nCC_adulto, email, num_telefone) values (200000007, 'sergio.marques@gmail.com', 912345694);
+insert into Adultos (nCC_adulto, email, num_telefone) values (200000008, 'teresa.machado@gmail.com', 912345695);
+insert into Adultos (nCC_adulto, email, num_telefone) values (20000009, 'vitor.neves@gmail.com', 912345696);
+insert into Adultos (nCC_adulto, email, num_telefone) values (200000010, 'zelia.lopes@gmail.com', 912345697);
 
-insert into Trabalhadores (nCC_trabalhdor, cv) 
-  values (100000001, 'Experiência em babysitting e festas infantis');
-insert into Trabalhadores (nCC_trabalhdor, cv) 
-  values (100000002, 'Formação em primeiros socorros e cuidado infantil');
-insert into Trabalhadores (nCC_trabalhdor, cv) 
-  values (100000003, 'Experiência em organização de eventos para crianças');
-insert into Trabalhadores (nCC_trabalhdor, cv) 
-  values (100000004, 'Formação em animação infantil e atividades lúdicas');
-insert into Trabalhadores (nCC_trabalhdor, cv) 
-  values (100000005, 'Experiência em educação e cuidado infantil');
-insert into Trabalhadores (nCC_trabalhdor, cv) 
-  values (100000006, 'Formação em nutrição infantil e cuidados de saúde');
-insert into Trabalhadores (nCC_trabalhdor, cv) 
-  values (100000007, 'Experiência em babysitting e organização de festas infantis');
-insert into Trabalhadores (nCC_trabalhdor, cv) 
-  values (100000008, 'Formação em primeiros socorros e cuidado infantil');
-insert into Trabalhadores (nCC_trabalhdor, cv) 
-  values (100000009, 'Experiência em organização de eventos para crianças');
-insert into Trabalhadores (nCC_trabalhdor, cv) 
-  values (100000010, 'Formação em animação infantil e atividades lúdicas');
+insert into Trabalhadores (nCC_trabalhdor, cv) values (100000001, 'Experiência em babysitting e festas infantis');
+insert into Trabalhadores (nCC_trabalhdor, cv) values (100000002, 'Formação em primeiros socorros e cuidado infantil');
+insert into Trabalhadores (nCC_trabalhdor, cv) values (100000003, 'Experiência em organização de eventos para crianças');
+insert into Trabalhadores (nCC_trabalhdor, cv) values (100000004, 'Formação em animação infantil e atividades lúdicas');
+insert into Trabalhadores (nCC_trabalhdor, cv) values (100000005, 'Experiência em educação e cuidado infantil');
+insert into Trabalhadores (nCC_trabalhdor, cv) values (100000006, 'Formação em nutrição infantil e cuidados de saúde');
+insert into Trabalhadores (nCC_trabalhdor, cv) values (100000007, 'Experiência em babysitting e organização de festas infantis');
+insert into Trabalhadores (nCC_trabalhdor, cv) values (100000008, 'Formação em primeiros socorros e cuidado infantil');
+insert into Trabalhadores (nCC_trabalhdor, cv) values (100000009, 'Experiência em organização de eventos para crianças');
+insert into Trabalhadores (nCC_trabalhdor, cv) values (100000010, 'Formação em animação infantil e atividades lúdicas');
 
 -- cliente com 3 filhos
 insert into Clientes (nCC_cliente, morada) values (200000001, 'Rua das Flores, 123');
@@ -114,46 +84,30 @@ insert into Clientes (nCC_cliente, morada) values (200000009, 'Rua das Árvores,
 insert into Clientes (nCC_cliente, morada) values (200000010, 'Praça do Sol, 444');
 
 -- 2 irmãos associados ao cliente 200000002
-insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento) 
-  values (300000001, 200000002, to_date('2015-05-10', 'YYYY-MM-DD'));
-insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento) 
-values (300000002, 200000002, to_date('2017-08-20', 'YYYY-MM-DD'));
+insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento) values (300000001, 200000002, to_date('2015-05-10', 'YYYY-MM-DD'));
+insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento) values (300000002, 200000002, to_date('2017-08-20', 'YYYY-MM-DD'));
 -- 3 irmãos associados ao cliente 200000001
-insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento) 
-  values (300000003, 200000001, to_date('2016-03-15', 'YYYY-MM-DD'));
-insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento) 
-  values (300000004, 200000001, to_date('2018-11-05', 'YYYY-MM-DD'));
-insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento) 
-  values (300000005, 200000001, to_date('2014-01-25', 'YYYY-MM-DD'));
+insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento) values (300000003, 200000001, to_date('2016-03-15', 'YYYY-MM-DD'));
+insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento) values (300000004, 200000001, to_date('2018-11-05', 'YYYY-MM-DD'));
+insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento) values (300000005, 200000001, to_date('2014-01-25', 'YYYY-MM-DD'));
 -- filhos únicos
-insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento) 
-  values (300000006, 200000003, to_date('2019-07-30', 'YYYY-MM-DD'));
-insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento) 
-  values (300000007, 200000004, to_date('2015-09-12', 'YYYY-MM-DD'));
-insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento) 
-  values (300000008, 200000005, to_date('2017-12-22', 'YYYY-MM-DD'));
-insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento) 
-  values (300000009, 200000006, to_date('2016-04-18', 'YYYY-MM-DD'));
-insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento) 
-  values (300000010, 200000007, to_date('2018-10-02', 'YYYY-MM-DD'));
+insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento) values (300000006, 200000003, to_date('2019-07-30', 'YYYY-MM-DD'));
+insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento) values (300000007, 200000004, to_date('2015-09-12', 'YYYY-MM-DD'));
+insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento) values (300000008, 200000005, to_date('2017-12-22', 'YYYY-MM-DD'));
+insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento) values (300000009, 200000006, to_date('2016-04-18', 'YYYY-MM-DD'));
+insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento) values (300000010, 200000007, to_date('2018-10-02', 'YYYY-MM-DD'));
 
 -- ============================================================
 -- INSERTS COMPLETOS
 -- ============================================================
 
 -- 6 Serviços para cobrir os 2 Eventos, 2 Festas e 2 Babysittings
-insert into Servicos (nCC_cliente, data_servico, local_servico, hora_inicio, hora_fim, preco_servico) 
-  values (200000001, to_date('2026-06-01', 'YYYY-MM-DD'), 'Quinta das Flores', to_date('2026-06-01 14:00', 'YYYY-MM-DD HH24:MI'), to_date('2026-06-01 18:00', 'YYYY-MM-DD HH24:MI'), 150.00);
-insert into Servicos (nCC_cliente, data_servico, local_servico, hora_inicio, hora_fim, preco_servico) 
-  values (200000002, to_date('2026-06-05', 'YYYY-MM-DD'), 'Salão Principal', to_date('2026-06-05 10:00', 'YYYY-MM-DD HH24:MI'), to_date('2026-06-05 16:00', 'YYYY-MM-DD HH24:MI'), 200.00);
-insert into Servicos (nCC_cliente, data_servico, local_servico, hora_inicio, hora_fim, preco_servico) 
-  values (200000003, to_date('2026-06-10', 'YYYY-MM-DD'), 'Parque Central', to_date('2026-06-10 15:00', 'YYYY-MM-DD HH24:MI'), to_date('2026-06-10 19:00', 'YYYY-MM-DD HH24:MI'), 120.00);
-insert into Servicos (nCC_cliente, data_servico, local_servico, hora_inicio, hora_fim, preco_servico) 
-  values (200000004, to_date('2026-06-12', 'YYYY-MM-DD'), 'Rua do Sol, 321', to_date('2026-06-12 14:00', 'YYYY-MM-DD HH24:MI'), to_date('2026-06-12 17:00', 'YYYY-MM-DD HH24:MI'), 100.00);
-insert into Servicos (nCC_cliente, data_servico, local_servico, hora_inicio, hora_fim, preco_servico) 
-  values (200000005, to_date('2026-06-15', 'YYYY-MM-DD'), 'Avenida das Estrelas, 654', to_date('2026-06-15 20:00', 'YYYY-MM-DD HH24:MI'), to_date('2026-06-15 23:59', 'YYYY-MM-DD HH24:MI'), 50.00);
-insert into Servicos (nCC_cliente, data_servico, local_servico, hora_inicio, hora_fim, preco_servico) 
-  values (200000006, to_date('2026-06-20', 'YYYY-MM-DD'), 'Rua da Lua, 987', to_date('2026-06-20 19:00', 'YYYY-MM-DD HH24:MI'), to_date('2026-06-20 23:00', 'YYYY-MM-DD HH24:MI'), 60.00);
+insert into Servicos (nCC_cliente, data_servico, local_servico, hora_inicio, hora_fim, preco_servico) values (200000001, to_date('2026-06-01', 'YYYY-MM-DD'), 'Quinta das Flores', to_date('2026-06-01 14:00', 'YYYY-MM-DD HH24:MI'), to_date('2026-06-01 18:00', 'YYYY-MM-DD HH24:MI'), 150.00);
+insert into Servicos (nCC_cliente, data_servico, local_servico, hora_inicio, hora_fim, preco_servico) values (200000002, to_date('2026-06-05', 'YYYY-MM-DD'), 'Salão Principal', to_date('2026-06-05 10:00', 'YYYY-MM-DD HH24:MI'), to_date('2026-06-05 16:00', 'YYYY-MM-DD HH24:MI'), 200.00);
+insert into Servicos (nCC_cliente, data_servico, local_servico, hora_inicio, hora_fim, preco_servico) values (200000003, to_date('2026-06-10', 'YYYY-MM-DD'), 'Parque Central', to_date('2026-06-10 15:00', 'YYYY-MM-DD HH24:MI'), to_date('2026-06-10 19:00', 'YYYY-MM-DD HH24:MI'), 120.00);
+insert into Servicos (nCC_cliente, data_servico, local_servico, hora_inicio, hora_fim, preco_servico) values (200000004, to_date('2026-06-12', 'YYYY-MM-DD'), 'Rua do Sol, 321', to_date('2026-06-12 14:00', 'YYYY-MM-DD HH24:MI'), to_date('2026-06-12 17:00', 'YYYY-MM-DD HH24:MI'), 100.00);
+insert into Servicos (nCC_cliente, data_servico, local_servico, hora_inicio, hora_fim, preco_servico) values (200000005, to_date('2026-06-15', 'YYYY-MM-DD'), 'Avenida das Estrelas, 654', to_date('2026-06-15 20:00', 'YYYY-MM-DD HH24:MI'), to_date('2026-06-15 23:59', 'YYYY-MM-DD HH24:MI'), 50.00);
+insert into Servicos (nCC_cliente, data_servico, local_servico, hora_inicio, hora_fim, preco_servico) values (200000006, to_date('2026-06-20', 'YYYY-MM-DD'), 'Rua da Lua, 987', to_date('2026-06-20 19:00', 'YYYY-MM-DD HH24:MI'), to_date('2026-06-20 23:00', 'YYYY-MM-DD HH24:MI'), 60.00);
 
 -- Especializações dos Serviços
 insert into Eventos (id_evento, tipo_evento) values (1, 'Evento Corporativo');
@@ -169,50 +123,30 @@ insert into Babysitting (id_babysitting, horas_dormir) values (6, to_date('2026-
 -- Disponibilidade
 -- (Constraint ck_disp_dia obriga a dias específicos com primeira letra maiúscula)
 -- ============================================================
-insert into Disponibilidade (nCC_trabalhador, dia_semana, hora_inicio, hora_fim) 
-  values (100000001, 'Segunda', to_date('08:00', 'HH24:MI'), to_date('18:00', 'HH24:MI'));
-insert into Disponibilidade (nCC_trabalhador, dia_semana, hora_inicio, hora_fim) 
-  values (100000002, 'Terça', to_date('09:00', 'HH24:MI'), to_date('17:00', 'HH24:MI'));
-insert into Disponibilidade (nCC_trabalhador, dia_semana, hora_inicio, hora_fim) 
-  values (100000003, 'Quarta', to_date('10:00', 'HH24:MI'), to_date('16:00', 'HH24:MI'));
-insert into Disponibilidade (nCC_trabalhador, dia_semana, hora_inicio, hora_fim) 
-  values (100000004, 'Quinta', to_date('08:00', 'HH24:MI'), to_date('18:00', 'HH24:MI'));
-insert into Disponibilidade (nCC_trabalhador, dia_semana, hora_inicio, hora_fim) 
-  values (100000005, 'Sexta', to_date('09:00', 'HH24:MI'), to_date('17:00', 'HH24:MI'));
-insert into Disponibilidade (nCC_trabalhador, dia_semana, hora_inicio, hora_fim) 
-  values (100000006, 'Sábado', to_date('10:00', 'HH24:MI'), to_date('16:00', 'HH24:MI'));
-insert into Disponibilidade (nCC_trabalhador, dia_semana, hora_inicio, hora_fim) 
-  values (100000007, 'Domingo', to_date('08:00', 'HH24:MI'), to_date('18:00', 'HH24:MI'));
-insert into Disponibilidade (nCC_trabalhador, dia_semana, hora_inicio, hora_fim) 
-  values (100000008, 'Segunda', to_date('09:00', 'HH24:MI'), to_date('17:00', 'HH24:MI'));
-insert into Disponibilidade (nCC_trabalhador, dia_semana, hora_inicio, hora_fim) 
-  values (100000009, 'Terça', to_date('10:00', 'HH24:MI'), to_date('16:00', 'HH24:MI'));
-insert into Disponibilidade (nCC_trabalhador, dia_semana, hora_inicio, hora_fim) 
-  values (100000010, 'Quarta', to_date('08:00', 'HH24:MI'), to_date('18:00', 'HH24:MI'));
+insert into Disponibilidade (nCC_trabalhador, dia_semana, hora_inicio, hora_fim) values (100000001, 'Segunda', to_date('08:00', 'HH24:MI'), to_date('18:00', 'HH24:MI'));
+insert into Disponibilidade (nCC_trabalhador, dia_semana, hora_inicio, hora_fim) values (100000002, 'Terça', to_date('09:00', 'HH24:MI'), to_date('17:00', 'HH24:MI'));
+insert into Disponibilidade (nCC_trabalhador, dia_semana, hora_inicio, hora_fim) values (100000003, 'Quarta', to_date('10:00', 'HH24:MI'), to_date('16:00', 'HH24:MI'));
+insert into Disponibilidade (nCC_trabalhador, dia_semana, hora_inicio, hora_fim) values (100000004, 'Quinta', to_date('08:00', 'HH24:MI'), to_date('18:00', 'HH24:MI'));
+insert into Disponibilidade (nCC_trabalhador, dia_semana, hora_inicio, hora_fim) values (100000005, 'Sexta', to_date('09:00', 'HH24:MI'), to_date('17:00', 'HH24:MI'));
+insert into Disponibilidade (nCC_trabalhador, dia_semana, hora_inicio, hora_fim) values (100000006, 'Sábado', to_date('10:00', 'HH24:MI'), to_date('16:00', 'HH24:MI'));
+insert into Disponibilidade (nCC_trabalhador, dia_semana, hora_inicio, hora_fim) values (100000007, 'Domingo', to_date('08:00', 'HH24:MI'), to_date('18:00', 'HH24:MI'));
+insert into Disponibilidade (nCC_trabalhador, dia_semana, hora_inicio, hora_fim) values (100000008, 'Segunda', to_date('09:00', 'HH24:MI'), to_date('17:00', 'HH24:MI'));
+insert into Disponibilidade (nCC_trabalhador, dia_semana, hora_inicio, hora_fim) values (100000009, 'Terça', to_date('10:00', 'HH24:MI'), to_date('16:00', 'HH24:MI'));
+insert into Disponibilidade (nCC_trabalhador, dia_semana, hora_inicio, hora_fim) values (100000010, 'Quarta', to_date('08:00', 'HH24:MI'), to_date('18:00', 'HH24:MI'));
 
 -- ============================================================
 -- Alergias
 -- ============================================================
-insert into Alergias (nCC_crianca, alergia) 
-  values (300000001, 'Alergia a amendoins');
-insert into Alergias (nCC_crianca, alergia) 
-  values (300000002, 'Alergia a frutos do mar');
-insert into Alergias (nCC_crianca, alergia) 
-  values (300000003, 'Alergia à lactose');
-insert into Alergias (nCC_crianca, alergia) 
-  values (300000004, 'Alergia a ovos');
-insert into Alergias (nCC_crianca, alergia) 
-  values (300000005, 'Alergia ao glúten');
-insert into Alergias (nCC_crianca, alergia) 
-  values (300000006, 'Alergia a amendoins');
-insert into Alergias (nCC_crianca, alergia) 
-  values (300000007, 'Alergia a pólen');
-insert into Alergias (nCC_crianca, alergia) 
-  values (300000008, 'Alergia à lactose');
-insert into Alergias (nCC_crianca, alergia) 
-  values (300000009, 'Alergia a ovos');
-insert into Alergias (nCC_crianca, alergia) 
-  values (300000010, 'Sem alergias conhecidas');
+insert into Alergias (nCC_crianca, alergia) values (300000001, 'Alergia a amendoins');
+insert into Alergias (nCC_crianca, alergia) values (300000002, 'Alergia a frutos do mar');
+insert into Alergias (nCC_crianca, alergia) values (300000003, 'Alergia à lactose');
+insert into Alergias (nCC_crianca, alergia) values (300000004, 'Alergia a ovos');
+insert into Alergias (nCC_crianca, alergia) values (300000005, 'Alergia ao glúten');
+insert into Alergias (nCC_crianca, alergia) values (300000006, 'Alergia a amendoins');
+insert into Alergias (nCC_crianca, alergia) values (300000007, 'Alergia a pólen');
+insert into Alergias (nCC_crianca, alergia) values (300000008, 'Alergia à lactose');
+insert into Alergias (nCC_crianca, alergia) values (300000009, 'Alergia a ovos');
+insert into Alergias (nCC_crianca, alergia) values (300000010, 'Sem alergias conhecidas');
 
 -- ============================================================
 -- Inventário
@@ -224,32 +158,20 @@ insert into Inventario (nome_item, quantidade) values ('Brinquedos Didáticos', 
 insert into Inventario (nome_item, quantidade) values ('Material de primeiros socorros', 30);
 
 -- Pagamentos (Valida o método: Multibanco, MBWay, Transferencia, Numerario)
-insert into PagamentoCliente (id_servico, nCC_cliente, valor, metodo, data_pag) 
-  values (1, 200000001, 150.00, 'MBWay', to_date('2026-06-02', 'YYYY-MM-DD'));
-insert into PagamentoCliente (id_servico, nCC_cliente, valor, metodo, data_pag) 
-  values (2, 200000002, 200.00, 'Transferencia', to_date('2026-06-06', 'YYYY-MM-DD'));
-insert into PagamentoCliente (id_servico, nCC_cliente, valor, metodo, data_pag) 
-  values (3, 200000003, 120.00, 'Multibanco', to_date('2026-06-11', 'YYYY-MM-DD'));
-insert into PagamentoCliente (id_servico, nCC_cliente, valor, metodo, data_pag) 
-  values (4, 200000004, 100.00, 'Numerario', to_date('2026-06-12', 'YYYY-MM-DD'));
-insert into PagamentoCliente (id_servico, nCC_cliente, valor, metodo, data_pag) 
-  values (5, 200000005, 50.00, 'MBWay', to_date('2026-06-16', 'YYYY-MM-DD'));
-insert into PagamentoCliente (id_servico, nCC_cliente, valor, metodo, data_pag) 
-  values (6, 200000006, 60.00, 'Transferencia', to_date('2026-06-21', 'YYYY-MM-DD'));
+insert into PagamentoCliente (id_servico, nCC_cliente, valor, metodo, data_pag) values (1, 200000001, 150.00, 'MBWay', to_date('2026-06-02', 'YYYY-MM-DD'));
+insert into PagamentoCliente (id_servico, nCC_cliente, valor, metodo, data_pag) values (2, 200000002, 200.00, 'Transferencia', to_date('2026-06-06', 'YYYY-MM-DD'));
+insert into PagamentoCliente (id_servico, nCC_cliente, valor, metodo, data_pag) values (3, 200000003, 120.00, 'Multibanco', to_date('2026-06-11', 'YYYY-MM-DD'));
+insert into PagamentoCliente (id_servico, nCC_cliente, valor, metodo, data_pag) values (4, 200000004, 100.00, 'Numerario', to_date('2026-06-12', 'YYYY-MM-DD'));
+insert into PagamentoCliente (id_servico, nCC_cliente, valor, metodo, data_pag) values (5, 200000005, 50.00, 'MBWay', to_date('2026-06-16', 'YYYY-MM-DD'));
+insert into PagamentoCliente (id_servico, nCC_cliente, valor, metodo, data_pag) values (6, 200000006, 60.00, 'Transferencia', to_date('2026-06-21', 'YYYY-MM-DD'));
 
 -- Avaliações 
-insert into Avaliam (id_servico, nCC_cliente, classificacao, comentario, data_avaliacao) 
-  values (1, 200000001, 5, 'Excelente serviço e organização!', to_date('2026-06-03', 'YYYY-MM-DD'));
-insert into Avaliam (id_servico, nCC_cliente, classificacao, comentario, data_avaliacao) 
-  values (2, 200000002, 4, 'Correu muito bem, as crianças adoraram.', to_date('2026-06-07', 'YYYY-MM-DD'));
-insert into Avaliam (id_servico, nCC_cliente, classificacao, comentario, data_avaliacao) 
-  values (3, 200000003, 5, 'Festa fantástica.', to_date('2026-06-12', 'YYYY-MM-DD'));
-insert into Avaliam (id_servico, nCC_cliente, classificacao, comentario, data_avaliacao) 
-  values (4, 200000004, 4, 'Animadores muito prestáveis.', to_date('2026-06-13', 'YYYY-MM-DD'));
-insert into Avaliam (id_servico, nCC_cliente, classificacao, comentario, data_avaliacao) 
-  values (5, 200000005, 5, 'Babysitter 5 estrelas, adormeceu a criança a horas.', to_date('2026-06-17', 'YYYY-MM-DD'));
-insert into Avaliam (id_servico, nCC_cliente, classificacao, comentario, data_avaliacao) 
-  values (6, 200000006, 3, 'Bom, mas chegou ligeiramente atrasado.', to_date('2026-06-22', 'YYYY-MM-DD'));
+insert into Avaliam (id_servico, nCC_cliente, classificacao, comentario, data_avaliacao) values (1, 200000001, 5, 'Excelente serviço e organização!', to_date('2026-06-03', 'YYYY-MM-DD'));
+insert into Avaliam (id_servico, nCC_cliente, classificacao, comentario, data_avaliacao) values (2, 200000002, 4, 'Correu muito bem, as crianças adoraram.', to_date('2026-06-07', 'YYYY-MM-DD'));
+insert into Avaliam (id_servico, nCC_cliente, classificacao, comentario, data_avaliacao) values (3, 200000003, 5, 'Festa fantástica.', to_date('2026-06-12', 'YYYY-MM-DD'));
+insert into Avaliam (id_servico, nCC_cliente, classificacao, comentario, data_avaliacao) values (4, 200000004, 4, 'Animadores muito prestáveis.', to_date('2026-06-13', 'YYYY-MM-DD'));
+insert into Avaliam (id_servico, nCC_cliente, classificacao, comentario, data_avaliacao) values (5, 200000005, 5, 'Babysitter 5 estrelas, adormeceu a criança a horas.', to_date('2026-06-17', 'YYYY-MM-DD'));
+insert into Avaliam (id_servico, nCC_cliente, classificacao, comentario, data_avaliacao) values (6, 200000006, 3, 'Bom, mas chegou ligeiramente atrasado.', to_date('2026-06-22', 'YYYY-MM-DD'));
 
 -- Participações (Crianças distribuídas pelos eventos)
 insert into Participam (id_servico, nCC_crianca) values (1, 300000001);
@@ -372,4 +294,4 @@ SELECT * FROM Adultos WHERE nCC_adulto = 100000010;
 SELECT * FROM Trabalhadores WHERE nCC_trabalhador = 100000010;
 
 
-commit;
+commit
