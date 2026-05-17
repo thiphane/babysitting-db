@@ -1,16 +1,30 @@
--- ============================================================
+-- ==============
 -- DROP triggers
--- ============================================================
+-- ==============
 drop trigger trg_check_horas_dormir;
 drop trigger trg_check_stock;
 drop trigger trg_update_stock;
+drop trigger trg_check_valid_payment;
+drop trigger trg_check_sobreposicao_trabalhador;
+drop trigger trg_check_data_avaliacao;
+drop trigger trg_check_disponibilidade;
+drop trigger trg_check_idade_maxima;
+drop trigger trg_instead_of_insert_or_update_cliente;
+drop trigger trg_instead_of_insert_or_update_trabalhador;
+drop trigger trg_instead_of_insert_or_update_crianca;
+drop trigger trg_instead_of_insert_or_update_babysitting;
+drop trigger trg_instead_of_insert_or_update_evento;
+drop trigger trg_instead_of_insert_or_update_festa;
 drop view vw_clientes_form;
 drop view vw_trabalhadores_form;
 drop view vw_criancas_form;
+drop view vw_eventos;
+drop view vw_festas;
+drop view vw_babysitting;
 
--- ============================================================
--- DROP tables 
--- ============================================================
+-- ============
+-- DROP tables
+-- ============
 drop table Utilizam cascade constraints;
 drop table Trabalham cascade constraints;
 drop table Participam cascade constraints;
@@ -29,9 +43,9 @@ drop table Trabalhadores cascade constraints;
 drop table Adultos cascade constraints;
 drop table Pessoas cascade constraints;
 
--- ============================================================
+-- ==============
 -- CREATE tables
--- ============================================================
+-- ==============
 create table Pessoas (
 	nCC number(9) not null,
 	nome varchar2(100) not null,
@@ -45,6 +59,8 @@ create table Adultos (
 	constraint pk_adultos primary key (nCC_adulto),
 	constraint fk_adultos_pessoas foreign key (nCC_adulto) 
     references Pessoas(nCC) on delete cascade
+	constraint uq_email unique (email)
+	constraint uq_num_telefone unique (num_telefone)
 );
 
 create table Trabalhadores (
@@ -72,6 +88,7 @@ create table Criancas (
   	references Pessoas(nCC) on delete cascade,
 	constraint fk_criancas_clientes foreign key (nCC_cliente) 
     references Clientes(nCC_cliente) on delete cascade
+	constraint ck_criancas_idade check (data_nascimento <= sysdate)
 );
 
 create table Servicos (
@@ -150,7 +167,7 @@ create table PagamentoCliente (
 	data_pag date not null,
 	constraint pk_pagamento primary key (id_pagamento),
 	constraint fk_pagamento_servicos foreign key (id_servico) 
-    references Servicos(id_servico) on delete cascade ,
+    references Servicos(id_servico) on delete cascade,
 	constraint fk_pagamento_clientes foreign key (nCC_cliente) 
     references Clientes(nCC_cliente) on delete cascade,
 	constraint ck_pagamento_valor check (valor > 0),
@@ -205,11 +222,13 @@ create table Utilizam (
 	constraint ck_utilizam_quantidade check (quantidade_gasta > 0)
 );
 
--- ============================================================
+-- ================
 -- CREATE triggers
--- ============================================================
+-- ================
+
+-- trigger para verificar se as horas de dormir estão dentro do horário do serviço
 create or replace trigger trg_check_horas_dormir
-before insert or update on Babysitting
+before insert on Babysitting
 for each row
 declare
 	v_inicio date;
@@ -219,15 +238,15 @@ begin
 	into v_inicio, v_fim
 	from Servicos
 	where id_servico = :new.id_babysitting;
-	
 	if :new.horas_dormir < v_inicio or :new.horas_dormir > v_fim then
-		raise_application_error(-20001, 'Horas de dormir devem estar dentro do horário do serviço.');
+		raise_application_error(-20001, 'Erro: as horas de dormir devem estar contidas no horário do serviço.');
 	end if;
 end;
 /
 
+-- trigger para verificar se a quantidade gasta é menor ou igual ao stock disponível
 create or replace trigger trg_check_stock
-before insert or update on Utilizam
+before insert on Utilizam
 for each row
 declare
 	v_stock number;
@@ -235,13 +254,13 @@ begin
 	select quantidade into v_stock 
 	from Inventario
 	where id_item = :new.id_item;
-	
 	if :new.quantidade_gasta > v_stock then
-		raise_application_error(-20002, 'Quantidade gasta excede o stock disponível.');
+		raise_application_error(-20002, 'Erro: a quantidade gasta excede o stock disponível.');
 	end if;
 end;
 /
 
+-- trigger para atualizar o stock no inventário
 create or replace trigger trg_update_stock
 after insert on Utilizam
 for each row
@@ -251,110 +270,328 @@ begin
 	where id_item = :new.id_item;
 end;
 /
+
+-- trigger para verificar se os pagamentos são validos 
+create or replace trigger trg_check_valid_payment
+before insert on PagamentoCliente
+for each row
+declare
+	v_preco_servico number(5,2);
+	v_id_servico number := :new.id_servico;
+begin
+	select preco_servico into v_preco_servico
+	from Servicos
+	where id_servico = v_id_servico;
+	if :new.valor != v_preco_servico then	
+		raise_application_error(-20003, 'Erro: o valor do pagamento não corresponde ao preço do serviço.');
+	end if;
+end;
+/
+
+-- trigger para nao ter trabalhadores em serviços sobrepostos 
+create or replace trigger trg_check_sobreposicao_trabalhador
+before insert or update on Trabalham
+for each row
+declare
+  pragma autonomous_transaction;
+  v_inicio_novo date;
+  v_fim_novo date;
+  v_conflitos number;
+begin
+  select hora_inicio, hora_fim into v_inicio_novo, v_fim_novo
+  from Servicos
+  where id_servico = :new.id_servico;
+  
+  select count(*) into v_conflitos
+  from Trabalham t
+  join Servicos s on t.id_servico = s.id_servico
+  where t.nCC_trabalhador = :new.nCC_trabalhador               
+    and t.id_servico <> :new.id_servico
+    and s.hora_inicio < v_fim_novo
+    and s.hora_fim > v_inicio_novo;  
+    
+  if v_conflitos > 0 then
+    raise_application_error(-20004, 'Erro: este trabalhador já tem outro serviço agendado para o mesmo horário.');
+  end if;
+  commit;
+end;
+/
+
+-- trigger para serviços nao serem avaliados antes de serem realizados
+create or replace trigger trg_check_data_avaliacao
+before insert or update on Avaliam
+for each row
+declare
+  v_hora_fim_servico date;
+begin
+  select hora_fim into v_hora_fim_servico
+  from servicos
+  where id_servico = :new.id_servico;
+  if :new.data_avaliacao < v_hora_fim_servico then
+    raise_application_error(-20005, 'Erro: a avaliação só pode ser registada após o serviço terminar.');
+  end if;
+end;
+/
+
+-- trigger para garantir que um trabalhador só pode ser atribuido a um serviço se tiver disponibilidade
+create or replace trigger trg_check_disponibilidade
+before insert or update on Trabalham
+for each row
+declare
+  v_data_servico date;
+  v_h_serv_inicio varchar2(5);
+  v_h_serv_fim varchar2(5);
+  v_dia_semana varchar2(20);
+  v_existe number;
+begin
+  select data_servico, to_char(hora_inicio, 'HH24:MI'), to_char(hora_fim, 'HH24:MI')
+  into v_data_servico, v_h_serv_inicio, v_h_serv_fim
+  from Servicos
+  where id_servico = :new.id_servico;
+  
+  v_dia_semana := to_char(v_data_servico, 'FmDay', 'NLS_DATE_LANGUAGE=PORTUGUESE');
+  v_dia_semana := replace(replace(v_dia_semana, 'ç', 'c'), 'á', 'a');
+  
+  select count(*) into v_existe
+  from Disponibilidade
+  where nCC_trabalhador = :new.nCC_trabalhador
+    and dia_semana = v_dia_semana
+    and to_char(hora_inicio, 'HH24:MI') <= v_h_serv_inicio
+    and to_char(hora_fim, 'HH24:MI') >= v_h_serv_fim;
+    
+  if v_existe = 0 then
+    raise_application_error(-20006, 'Erro: O trabalhador não tem disponibilidade para o dia ou horário deste serviço.');
+  end if;
+end;
+/
+
+-- trigger para garantir que uma criança não tem 18 anos ou mais
+create or replace trigger trg_check_idade_maxima
+before insert or update on Criancas
+for each row
+declare
+  v_idade number;
+begin
+  v_idade := trunc(months_between(sysdate, :new.data_nascimento) / 12);
+  if v_idade >= 18 then
+    raise_application_error(-20007, 'Erro: A pessoa registada tem 18 anos ou mais e não pode ser inserida como criança.');
+  end if;
+end;
+/
+
+-- trigger para garantir que ao inserir ou atualizar um cliente o mesmo é inserido na tabela Pessoas e Adultos
+create or replace trigger trg_instead_of_insert_or_update_cliente
+instead of insert or update on vw_clientes_form
+for each row
+begin
+	if inserting then
+		insert into Pessoas (nCC, nome)
+		values (:new.nCC, :new.nome);
+		insert into Adultos (nCC_adulto, email, num_telefone)
+		values (:new.nCC, :new.email, :new.num_telefone);
+		insert into Clientes (nCC_cliente, morada)
+		values (:new.nCC, :new.morada);
+	elsif updating then
+		update Pessoas set nome = :new.nome where nCC = :old.nCC;
+		update Adultos set email = :new.email, num_telefone = :new.num_telefone where nCC_adulto = :old.nCC;
+		update Clientes set morada = :new.morada where nCC_cliente = :old.nCC;
+	end if;
+end;
+/
+
+-- trigger para garantir que ao inserir ou atualizar um trabalhador o mesmo é inserido na tabela Pessoas e Adultos
+create or replace trigger trg_instead_of_insert_or_update_trabalhador
+instead of insert or update on vw_trabalhadores_form
+for each row
+begin
+	if inserting then
+		insert into Pessoas (nCC, nome)
+		values (:new.nCC, :new.nome);
+		insert into Adultos (nCC_adulto, email, num_telefone)
+		values (:new.nCC, :new.email, :new.num_telefone);
+		insert into Trabalhadores (nCC_trabalhador, cv)
+		values (:new.nCC, :new.cv);
+	elsif updating then
+		update Pessoas set nome = :new.nome where nCC = :old.nCC;
+		update Adultos set email = :new.email, num_telefone = :new.num_telefone where nCC_adulto = :old.nCC;
+		update Trabalhadores set cv = :new.cv where nCC_trabalhador = :old.nCC;
+	end if;
+end;
+/
+
+-- trigger para garantir que ao inserir ou atualizar uma criança a mesma é inserida na tabela Pessoas
+create or replace trigger trg_instead_of_insert_or_update_crianca
+instead of insert or update on vw_criancas_form
+for each row
+begin
+	if inserting then
+		insert into Pessoas (nCC, nome)
+		values (:new.nCC, :new.nome);
+		insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento)
+		values (:new.nCC, :new.nCC_cliente, :new.data_nascimento);
+	elsif updating then
+		update Pessoas set nome = :new.nome where nCC = :old.nCC;
+		update Criancas set nCC_cliente = :new.nCC_cliente, data_nascimento = :new.data_nascimento where nCC_crianca = :old.nCC;
+	end if;
+end;
+/
+
+-- trigger para babysitting
+create or replace trigger trg_instead_of_insert_or_update_babysitting
+instead of insert or update on vw_babysitting
+for each row
+declare
+  v_novo_id number;
+begin
+  if inserting then
+    insert into Servicos (nCC_cliente, data_servico, local_servico, hora_inicio, hora_fim, preco_servico)
+    values (:new.nCC_cliente, :new.data_servico, :new.local_servico, :new.hora_inicio, :new.hora_fim, :new.preco_servico)
+    returning id_servico into v_novo_id;
+    
+    insert into Babysitting (id_babysitting, horas_dormir)
+    values (v_novo_id, :new.horas_dormir);
+  elsif updating then
+    update Servicos 
+    set nCC_cliente = :new.nCC_cliente, data_servico = :new.data_servico, local_servico = :new.local_servico, hora_inicio = :new.hora_inicio, hora_fim = :new.hora_fim, preco_servico = :new.preco_servico 
+    where id_servico = :old.id_servico;
+    
+    update Babysitting 
+    set horas_dormir = :new.horas_dormir 
+    where id_babysitting = :old.id_servico;
+  end if;
+end;
+/
+
+-- trigger para evento
+create or replace trigger trg_instead_of_insert_or_update_evento
+instead of insert or update on vw_eventos
+for each row
+declare
+  v_novo_id number;
+begin
+  if inserting then
+    insert into Servicos (nCC_cliente, data_servico, local_servico, hora_inicio, hora_fim, preco_servico)
+    values (:new.nCC_cliente, :new.data_servico, :new.local_servico, :new.hora_inicio, :new.hora_fim, :new.preco_servico)
+    returning id_servico into v_novo_id;
+    
+    insert into Eventos (id_evento, tipo_evento)
+    values (v_novo_id, :new.tipo_evento);
+  elsif updating then
+    update Servicos 
+    set nCC_cliente = :new.nCC_cliente, data_servico = :new.data_servico, local_servico = :new.local_servico, hora_inicio = :new.hora_inicio, hora_fim = :new.hora_fim, preco_servico = :new.preco_servico 
+    where id_servico = :old.id_servico;
+    
+    update Eventos 
+    set tipo_evento = :new.tipo_evento 
+    where id_evento = :old.id_servico;
+  end if;
+end;
+/
+
+-- trigger para festa
+create or replace trigger trg_instead_of_insert_or_update_festa
+instead of insert or update on vw_festas
+for each row
+declare
+  v_novo_id number;
+begin
+  if inserting then
+    insert into Servicos (nCC_cliente, data_servico, local_servico, hora_inicio, hora_fim, preco_servico)
+    values (:new.nCC_cliente, :new.data_servico, :new.local_servico, :new.hora_inicio, :new.hora_fim, :new.preco_servico)
+    returning id_servico into v_novo_id;
+    
+    insert into Festas (id_festa, tema_festa)
+    values (v_novo_id, :new.tema_festa);
+  elsif updating then
+    update Servicos 
+    set nCC_cliente = :new.nCC_cliente, data_servico = :new.data_servico, local_servico = :new.local_servico, hora_inicio = :new.hora_inicio, hora_fim = :new.hora_fim, preco_servico = :new.preco_servico 
+    where id_servico = :old.id_servico;
+    
+    update Festas 
+    set tema_festa = :new.tema_festa 
+    where id_festa = :old.id_servico;
+  end if;
+end;
+/
+
+-- =============
 -- CREATE views
+-- =============
+
+-- view para clientes
 create or replace view vw_clientes_form as
 select
-    p.nCC,
-    p.nome,
-    a.email,
-    a.num_telefone,
-    c.morada
+	p.nCC,
+	p.nome,
+	a.email,
+	a.num_telefone,
+	c.morada
 from Pessoas p
-join Adultos  a on a.nCC_adulto   = p.nCC
-join Clientes c on c.nCC_cliente  = a.nCC_adulto;
+join Adultos a on a.nCC_adulto = p.nCC
+join Clientes c on c.nCC_cliente = a.nCC_adulto;
 
+-- view para trabalhadores
 create or replace view vw_trabalhadores_form as
 select
-    p.nCC,
-    p.nome,
-    a.email,
-    a.num_telefone,
-    t.cv
+	p.nCC,
+	p.nome,
+	a.email,
+	a.num_telefone,
+	t.cv
 from Pessoas p
-join Adultos       a on a.nCC_adulto       = p.nCC
-join Trabalhadores t on t.nCC_trabalhador  = a.nCC_adulto;
+join Adultos a on a.nCC_adulto = p.nCC
+join Trabalhadores t on t.nCC_trabalhador = a.nCC_adulto;
 
+-- view para crianças 
 create or replace view vw_criancas_form as
 select
-    p.nCC,
-    p.nome,
-    c.nCC_cliente,
-    c.data_nascimento
+	p.nCC,
+	p.nome,
+	c.nCC_cliente,
+	c.data_nascimento
 from Pessoas p
 join Criancas c on c.nCC_crianca = p.nCC;
 
+-- view para eventos
+create or replace view vw_eventos as 
+select 
+  s.id_servico,
+  s.nCC_cliente, 
+  s.data_servico, 
+  s.local_servico, 
+  s.hora_inicio, 
+  s.hora_fim, 
+  s.preco_servico, 
+  e.tipo_evento
+from servicos s
+join eventos e on s.id_servico = e.id_evento;
 
--- CREATE triggers das views (INSTEAD OF INSERT)
-create or replace trigger trg_instead_of_insert_cliente
-instead of insert on vw_clientes_form
-for each row
-begin
-    insert into Pessoas (nCC, nome)
-    values (:new.nCC, :new.nome);
+-- view para festas
+create or replace view vw_festas as
+select 
+  s.id_servico,
+  s.nCC_cliente, 
+  s.data_servico, 
+  s.local_servico, 
+  s.hora_inicio, 
+  s.hora_fim, 
+  s.preco_servico, 
+  f.tema_festa
+from servicos s
+join festas f on s.id_servico = f.id_festa;
 
-    insert into Adultos (nCC_adulto, email, num_telefone)
-    values (:new.nCC, :new.email, :new.num_telefone);
-
-    insert into Clientes (nCC_cliente, morada)
-    values (:new.nCC, :new.morada);
-end;
-/
-
-create or replace trigger trg_instead_of_insert_trabalhador
-instead of insert on vw_trabalhadores_form
-for each row
-begin
-    insert into Pessoas (nCC, nome)
-    values (:new.nCC, :new.nome);
-
-    insert into Adultos (nCC_adulto, email, num_telefone)
-    values (:new.nCC, :new.email, :new.num_telefone);
-
-    insert into Trabalhadores (nCC_trabalhador, cv)
-    values (:new.nCC, :new.cv);
-end;
-/
-
-create or replace trigger trg_instead_of_insert_crianca
-instead of insert on vw_criancas_form
-for each row
-begin
-    insert into Pessoas (nCC, nome)
-    values (:new.nCC, :new.nome);
-
-    insert into Criancas (nCC_crianca, nCC_cliente, data_nascimento)
-    values (:new.nCC, :new.nCC_cliente, :new.data_nascimento);
-end;
-/
-
--- CREATE triggers das views (INSTEAD OF UPDATE)
-create or replace trigger trg_instead_of_update_cliente
-instead of update on vw_clientes_form
-for each row
-begin
-    update Pessoas set nome = :new.nome where nCC = :old.nCC;
-    update Adultos set email = :new.email, num_telefone = :new.num_telefone where nCC_adulto = :old.nCC;
-    update Clientes set morada = :new.morada where nCC_cliente = :old.nCC;
-end;
-/
-
-create or replace trigger trg_instead_of_update_trabalhador
-instead of update on vw_trabalhadores_form
-for each row
-begin
-    update Pessoas set nome = :new.nome where nCC = :old.nCC;
-    update Adultos set email = :new.email, num_telefone = :new.num_telefone where nCC_adulto = :old.nCC;
-    update Trabalhadores set cv = :new.cv where nCC_trabalhador = :old.nCC;
-end;
-/
-
-create or replace trigger trg_instead_of_update_crianca
-instead of update on vw_criancas_form
-for each row
-begin
-    update Pessoas set nome = :new.nome where nCC = :old.nCC;
-    update Criancas set nCC_cliente = :new.nCC_cliente, data_nascimento = :new.data_nascimento where nCC_crianca = :old.nCC;
-end;
-/
+-- views para babysitting
+create or replace view vw_babysitting as
+select 
+  s.id_servico,
+  s.nCC_cliente, 
+  s.data_servico, 
+  s.local_servico, 
+  s.hora_inicio, 
+  s.hora_fim, 
+  s.preco_servico, 
+  b.horas_dormir
+from servicos s
+join babysitting b on s.id_servico = b.id_babysitting;
 
 commit;
