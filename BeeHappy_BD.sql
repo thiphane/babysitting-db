@@ -8,7 +8,7 @@ drop trigger trg_check_valid_payment;
 drop trigger trg_check_sobreposicao_trabalhador;
 drop trigger trg_check_data_avaliacao;
 drop trigger trg_check_disponibilidade;
-drop trigger trg_check_idade_maxima;
+drop trigger trg_check_idade;
 drop trigger trg_instead_of_insert_or_update_cliente;
 drop trigger trg_instead_of_insert_or_update_trabalhador;
 drop trigger trg_instead_of_insert_or_update_crianca;
@@ -58,8 +58,8 @@ create table Adultos (
 	num_telefone number(9) not null,
 	constraint pk_adultos primary key (nCC_adulto),
 	constraint fk_adultos_pessoas foreign key (nCC_adulto) 
-    references Pessoas(nCC) on delete cascade
-	constraint uq_email unique (email)
+    references Pessoas(nCC) on delete cascade,
+	constraint uq_email unique (email),
 	constraint uq_num_telefone unique (num_telefone)
 );
 
@@ -80,15 +80,14 @@ create table Clientes (
 );
 
 create table Criancas (
-	nCC_crianca number(9) not null,
-	nCC_cliente number(9) not null,
-	data_nascimento date not null,
-	constraint pk_criancas primary key (nCC_crianca),
-	constraint fk_criancas_pessoas foreign key (nCC_crianca) 
-  	references Pessoas(nCC) on delete cascade,
-	constraint fk_criancas_clientes foreign key (nCC_cliente) 
+  nCC_crianca number(9) not null,
+  nCC_cliente number(9) not null,
+  data_nascimento date not null,
+  constraint pk_criancas primary key (nCC_crianca),
+  constraint fk_criancas_pessoas foreign key (nCC_crianca) 
+    references Pessoas(nCC) on delete cascade,
+  constraint fk_criancas_clientes foreign key (nCC_cliente) 
     references Clientes(nCC_cliente) on delete cascade
-	constraint ck_criancas_idade check (data_nascimento <= sysdate)
 );
 
 create table Servicos (
@@ -221,6 +220,86 @@ create table Utilizam (
     references Inventario(id_item) on delete cascade,
 	constraint ck_utilizam_quantidade check (quantidade_gasta > 0)
 );
+
+-- =============
+-- CREATE views
+-- =============
+
+-- view para clientes
+create or replace view vw_clientes_form as
+select
+	p.nCC,
+	p.nome,
+	a.email,
+	a.num_telefone,
+	c.morada
+from Pessoas p
+join Adultos a on a.nCC_adulto = p.nCC
+join Clientes c on c.nCC_cliente = a.nCC_adulto;
+
+-- view para trabalhadores
+create or replace view vw_trabalhadores_form as
+select
+	p.nCC,
+	p.nome,
+	a.email,
+	a.num_telefone,
+	t.cv
+from Pessoas p
+join Adultos a on a.nCC_adulto = p.nCC
+join Trabalhadores t on t.nCC_trabalhador = a.nCC_adulto;
+
+-- view para crianças 
+create or replace view vw_criancas_form as
+select
+	p.nCC,
+	p.nome,
+	c.nCC_cliente,
+	c.data_nascimento
+from Pessoas p
+join Criancas c on c.nCC_crianca = p.nCC;
+
+-- view para eventos
+create or replace view vw_eventos as 
+select 
+  s.id_servico,
+  s.nCC_cliente, 
+  s.data_servico, 
+  s.local_servico, 
+  s.hora_inicio, 
+  s.hora_fim, 
+  s.preco_servico, 
+  e.tipo_evento
+from servicos s
+join eventos e on s.id_servico = e.id_evento;
+
+-- view para festas
+create or replace view vw_festas as
+select 
+  s.id_servico,
+  s.nCC_cliente, 
+  s.data_servico, 
+  s.local_servico, 
+  s.hora_inicio, 
+  s.hora_fim, 
+  s.preco_servico, 
+  f.tema_festa
+from servicos s
+join festas f on s.id_servico = f.id_festa;
+
+-- views para babysitting
+create or replace view vw_babysitting as
+select 
+  s.id_servico,
+  s.nCC_cliente, 
+  s.data_servico, 
+  s.local_servico, 
+  s.hora_inicio, 
+  s.hora_fim, 
+  s.preco_servico, 
+  b.horas_dormir
+from servicos s
+join babysitting b on s.id_servico = b.id_babysitting;
 
 -- ================
 -- CREATE triggers
@@ -365,13 +444,17 @@ begin
 end;
 /
 
--- trigger para garantir que uma criança não tem 18 anos ou mais
-create or replace trigger trg_check_idade_maxima
+-- trigger para garantir que a idade da criança é válida
+create or replace trigger trg_check_idade
 before insert or update on Criancas
 for each row
 declare
   v_idade number;
 begin
+  if :new.data_nascimento > sysdate then
+    raise_application_error(-20008, 'Erro: A data de nascimento não pode ser no futuro.');
+  end if;
+
   v_idade := trunc(months_between(sysdate, :new.data_nascimento) / 12);
   if v_idade >= 18 then
     raise_application_error(-20007, 'Erro: A pessoa registada tem 18 anos ou mais e não pode ser inserida como criança.');
@@ -513,85 +596,5 @@ begin
   end if;
 end;
 /
-
--- =============
--- CREATE views
--- =============
-
--- view para clientes
-create or replace view vw_clientes_form as
-select
-	p.nCC,
-	p.nome,
-	a.email,
-	a.num_telefone,
-	c.morada
-from Pessoas p
-join Adultos a on a.nCC_adulto = p.nCC
-join Clientes c on c.nCC_cliente = a.nCC_adulto;
-
--- view para trabalhadores
-create or replace view vw_trabalhadores_form as
-select
-	p.nCC,
-	p.nome,
-	a.email,
-	a.num_telefone,
-	t.cv
-from Pessoas p
-join Adultos a on a.nCC_adulto = p.nCC
-join Trabalhadores t on t.nCC_trabalhador = a.nCC_adulto;
-
--- view para crianças 
-create or replace view vw_criancas_form as
-select
-	p.nCC,
-	p.nome,
-	c.nCC_cliente,
-	c.data_nascimento
-from Pessoas p
-join Criancas c on c.nCC_crianca = p.nCC;
-
--- view para eventos
-create or replace view vw_eventos as 
-select 
-  s.id_servico,
-  s.nCC_cliente, 
-  s.data_servico, 
-  s.local_servico, 
-  s.hora_inicio, 
-  s.hora_fim, 
-  s.preco_servico, 
-  e.tipo_evento
-from servicos s
-join eventos e on s.id_servico = e.id_evento;
-
--- view para festas
-create or replace view vw_festas as
-select 
-  s.id_servico,
-  s.nCC_cliente, 
-  s.data_servico, 
-  s.local_servico, 
-  s.hora_inicio, 
-  s.hora_fim, 
-  s.preco_servico, 
-  f.tema_festa
-from servicos s
-join festas f on s.id_servico = f.id_festa;
-
--- views para babysitting
-create or replace view vw_babysitting as
-select 
-  s.id_servico,
-  s.nCC_cliente, 
-  s.data_servico, 
-  s.local_servico, 
-  s.hora_inicio, 
-  s.hora_fim, 
-  s.preco_servico, 
-  b.horas_dormir
-from servicos s
-join babysitting b on s.id_servico = b.id_babysitting;
 
 commit;
