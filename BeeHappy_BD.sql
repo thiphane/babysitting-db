@@ -307,7 +307,7 @@ join babysitting b on s.id_servico = b.id_babysitting;
 
 -- trigger para verificar se as horas de dormir estão dentro do horário do serviço
 create or replace trigger trg_check_horas_dormir
-before insert on Babysitting
+before insert or update on Babysitting
 for each row
 declare
 	v_inicio date;
@@ -325,7 +325,7 @@ end;
 
 -- trigger para verificar se a quantidade gasta é menor ou igual ao stock disponível
 create or replace trigger trg_check_stock
-before insert on Utilizam
+before insert or update on Utilizam
 for each row
 declare
 	v_stock number;
@@ -341,7 +341,7 @@ end;
 
 -- trigger para atualizar o stock no inventário
 create or replace trigger trg_update_stock
-after insert on Utilizam
+after insert or update on Utilizam
 for each row
 begin
 	update Inventario
@@ -352,7 +352,7 @@ end;
 
 -- trigger para verificar se os pagamentos são validos 
 create or replace trigger trg_check_valid_payment
-before insert on PagamentoCliente
+before insert or update on PagamentoCliente
 for each row
 declare
 	v_preco_servico number(5,2);
