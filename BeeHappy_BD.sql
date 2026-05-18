@@ -1,6 +1,6 @@
--- ==============
--- DROP triggers
--- ==============
+-------------------
+-- DROP triggers --
+-------------------
 drop trigger trg_check_horas_dormir;
 drop trigger trg_check_stock;
 drop trigger trg_update_stock;
@@ -22,9 +22,9 @@ drop view vw_eventos;
 drop view vw_festas;
 drop view vw_babysitting;
 
--- ============
--- DROP tables
--- ============
+-----------------
+-- DROP tables --
+-----------------
 drop table Utilizam cascade constraints;
 drop table Trabalham cascade constraints;
 drop table Participam cascade constraints;
@@ -43,9 +43,9 @@ drop table Trabalhadores cascade constraints;
 drop table Adultos cascade constraints;
 drop table Pessoas cascade constraints;
 
--- ==============
--- CREATE tables
--- ==============
+-------------------
+-- CREATE tables --
+-------------------
 create table Pessoas (
 	nCC number(9) not null,
 	nome varchar2(100) not null,
@@ -221,9 +221,9 @@ create table Utilizam (
 	constraint ck_utilizam_quantidade check (quantidade_gasta > 0)
 );
 
--- =============
--- CREATE views
--- =============
+------------------
+-- CREATE views --
+------------------
 
 -- view para clientes
 create or replace view vw_clientes_form as
@@ -301,9 +301,9 @@ select
 from servicos s
 join babysitting b on s.id_servico = b.id_babysitting;
 
--- ================
--- CREATE triggers
--- ================
+---------------------
+-- CREATE triggers --
+---------------------
 
 -- trigger para verificar se as horas de dormir estão dentro do horário do serviço
 create or replace trigger trg_check_horas_dormir
@@ -427,9 +427,16 @@ begin
   into v_data_servico, v_h_serv_inicio, v_h_serv_fim
   from Servicos
   where id_servico = :new.id_servico;
-  
-  v_dia_semana := to_char(v_data_servico, 'FmDay', 'NLS_DATE_LANGUAGE=PORTUGUESE');
-  v_dia_semana := replace(replace(v_dia_semana, 'ç', 'c'), 'á', 'a');
+
+  v_dia_semana := case to_char(v_data_servico, 'DY', 'NLS_DATE_LANGUAGE=ENGLISH')
+    when 'MON' then 'Segunda'
+    when 'TUE' then 'Terça'
+    when 'WED' then 'Quarta'
+    when 'THU' then 'Quinta'
+    when 'FRI' then 'Sexta'
+    when 'SAT' then 'Sábado'
+    when 'SUN' then 'Domingo'
+  end;
   
   select count(*) into v_existe
   from Disponibilidade
